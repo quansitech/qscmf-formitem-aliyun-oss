@@ -1,0 +1,125 @@
+
+    <div class="form-group item_{$form.name} {$form.extra_class}">
+        <label class="left control-label">{$form.title}：</label>
+        <div class="right">
+            <div id="upload_{$gid}" <empty name='form.extra_attr'>data-url="{:U('/extends/AliyunOss/policyGet', array('type' => 'file'))}"<else/>{$form.extra_attr}</empty>>
+            <a id="selectfiles_{$gid}" class='uploadify-button btn btn-primary pure-button button-more button-xsmall' href="javascript:void(0);">上传文件</a>
+            <div class="uploadify-queue">
+            </div>
+        </div>
+        <div id="preview_{$gid}">
+            <input type="hidden" name="{$form.name}" value="{$form.value}">
+            <ul class="list-group file-box">
+                <notempty name="form.value">
+                    <li class="list-group-item file-item" data-id="{$form.value}">
+                        <i class="fa fa-file"></i>
+                        <span>{:showFileTitle($form['value'])}</span>
+                        <i class="fa fa-times-circle remove-file"></i>
+                    </li>
+                </notempty>
+            </ul>
+        </div>        <notempty name="form.tip">
+            <span class="check-tips small">{$form.tip}</span>
+        </notempty>
+        <notdefined name="file_oss">
+            <script type="text/javascript" src="__PUBLIC__/plupload-2.1.2/js/plupload.full.min.js"></script>
+            <script type="text/javascript" src="__PUBLIC__/ossupload/oss_upload.js"></script>
+            <define name="file_oss" value="1" />
+        </notdefined>
+        <script type="text/javascript">
+            new plupload.Uploader({
+                runtimes : 'html5,flash,silverlight,html4',
+                browse_button : 'selectfiles_{$gid}',
+                multi_selection: false,
+                container: document.getElementById('upload_{$gid}'),
+                flash_swf_url : '__PUBLIC__/plupload-2.1.2/js/Moxie.swf',
+                silverlight_xap_url : '__PUBLIC__/plupload-2.1.2/js/Moxie.xap',
+                url : 'http://oss.aliyuncs.com',
+
+                filters: {
+                    // mime_types : [
+                    //     { title : "files", extensions : "mp4,avi,rmvb,rm,mpg,mpeg,wmv,mkv,flv,mp3,doc,docx,xls,xlsx,pdf,ppt,txt,rar,ppt,pptx,doc,rtf,zip,7z,jpg,png" },
+                    // ],
+                    prevent_duplicates : true //不允许选取重复文件
+                },
+
+                init: {
+                    PostInit: function() {
+                        $('#upload_{$gid}').children('.uploadify-queue').html('');
+                    },
+
+                    FilesAdded: function(up, files) {
+                        plupload.each(files, function(file) {
+                            var html = '<div id="' + file.id + '" class="uploadify-queue-item">' +
+                                '<div class="uploadify-progress" lastloaded="0">' +
+                                '<div class="uploadify-progress-bar" style="width: 0%;">' +
+                                '</div>' +
+                                '</div>' +
+                                '<span class="up_percent">0%</span>' +
+                                '<span class="up_filename">' + file.name + '</span>' +
+                                '</div>';
+                            $('#upload_{$gid}').children('.uploadify-queue').html(html);
+                            set_upload_param(up, file.name, false, $('#upload_{$gid}').data('url'));
+                        });
+
+                    },
+
+//                        BeforeUpload: function(up, file) {
+//                            check_object_radio();
+//                        },
+
+                    UploadProgress: function(up, file) {
+                        $('#' + file.id).children('.uploadify-progress').attr('lastloaded', file.loaded);
+                        $('#' + file.id).find('.uploadify-progress-bar').css('width', file.percent + "%");
+                        $('#' + file.id).children('.up_percent').html(file.percent + "%");
+                    },
+
+                    FileUploaded: function(up, file, info) {
+                        if (info.status == 200)
+                        {
+                            var response = JSON.parse(info.response);
+                            var new_file = '<li class="list-group-item file-item" data-id="'+response.file_id+'"><i class="fa fa-file"></i> '
+                                +file.name+' <i class="fa fa-times-circle remove-file"></i></li>';
+                            $('#preview_{$gid} .list-group').html(new_file);
+                            $('#preview_{$gid} input').attr('value', response.file_id);
+                        }
+                        else
+                        {
+                            alert(info.response);
+                        }
+                        $('#upload_{$gid}').children('.uploadify-queue').empty();
+                    },
+
+                    Error: function(up, err) {
+                        if (err.code == -600) {
+                            alert("选择的文件太大了,可以根据应用情况，在upload.js 设置一下上传的最大大小");
+                        }
+                        else if (err.code == -601) {
+                            alert("选择的文件后缀不对,可以根据应用情况，在upload.js进行设置可允许的上传文件类型");
+                        }
+                        else if (err.code == -602) {
+                            alert("这个文件已经上传过一遍了");
+                        }
+                        else
+                        {
+                            alert(err.response);
+                        }
+                    }
+                }
+            }).init();
+
+
+            //删除视频文件
+            $('body').on('click', '#preview_{$gid} .remove-file', function () {
+                $('#preview_{$gid} input').val('');//删除后覆盖原input的值为空
+                var ready_for_remove_id = $(this).closest('.file-item').attr('data-id'); //获取待删除的文件ID
+                if(!ready_for_remove_id) {
+                    toastr.remove();
+                    $.bs_messagebox('错误', '错误', 'ok');
+                }
+                console.log($(this).closest('.file-item'));
+                $(this).closest('.file-item').remove(); //删除文件预览
+            });
+        </script>
+    </div>
+    </div>

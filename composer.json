@@ -1,0 +1,26 @@
+{
+  "name": "quansitech/qscmf-formitem-aliyun-oss",
+  "description": "qscmf formbuilder item",
+  "type": "library",
+  "keywords": ["thinkphp", "admin", "component", "formbuilder", "qscmf", "aliyun", "oss"],
+  "license": "MIT",
+
+  "require": {
+  "php": ">=7.2.0",
+  "tiderjian/think-core": "^8.0",
+  "aliyuncs/oss-sdk-php": "^2.0",
+  "guzzlehttp/guzzle": "^6.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "FormItem\\AliyunOss\\": "src/"
+    }
+  },
+  "extra": {
+    "qscmf": {
+      "providers": [
+        "FormItem\\AliyunOss\\AliyunOssProvider"
+      ]
+    }
+  }
+}
