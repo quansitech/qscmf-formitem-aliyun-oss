@@ -20,8 +20,8 @@
                 <span class="check-tips small">{$form.tip}</span>
             </notempty>
             <notdefined name="picture_oss">
-                <script type="text/javascript" src="__PUBLIC__/plupload-2.1.2/js/plupload.full.min.js"></script>
-                <script type="text/javascript" src="__PUBLIC__/ossupload/oss_upload.js"></script>
+                <script type="text/javascript" src="{:asset('aliyun-oss/plupload-2.1.2/js/plupload.full.min.js')}"></script>
+                <script type="text/javascript" src="{:asset('aliyun-oss/ossupload/oss_upload.js')}"></script>
                 <define name="picture_oss" value="1" />
             </notdefined>
             <script type="text/javascript">
@@ -30,8 +30,8 @@
                     browse_button : 'upload_{$gid}_selectfiles',
                     multi_selection: true,
                     container: document.getElementById('upload_{$gid}'),
-                    flash_swf_url : '__PUBLIC__/plupload-2.1.2/js/Moxie.swf',
-                    silverlight_xap_url : '__PUBLIC__/plupload-2.1.2/js/Moxie.xap',
+                    flash_swf_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.swf")}',
+                    silverlight_xap_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.xap")}',
                     url : 'http://oss.aliyuncs.com',
 
                     filters: {

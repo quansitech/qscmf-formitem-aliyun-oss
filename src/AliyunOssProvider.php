@@ -23,10 +23,6 @@ class AliyunOssProvider implements Provider {
 
         RegisterContainer::registerController('extends', 'AliyunOss', AliyunOssController::class);
 
-        RegisterContainer::registerSymLink(WWW_DIR . '/Public/audioplayer', __DIR__ . '/../asset/audioplayer');
-        RegisterContainer::registerSymLink(WWW_DIR . '/Public/cropper', __DIR__ . '/../asset/cropper');
-        RegisterContainer::registerSymLink(WWW_DIR . '/Public/ossupload', __DIR__ . '/../asset/ossupload');
-        RegisterContainer::registerSymLink(WWW_DIR . '/Public/ossuploader', __DIR__ . '/../asset/ossuploader');
-        RegisterContainer::registerSymLink(WWW_DIR . '/Public/plupload-2.1.2', __DIR__ . '/../asset/plupload-2.1.2');
+        RegisterContainer::registerSymLink(WWW_DIR . '/Public/aliyun-oss', __DIR__ . '/../asset/aliyun-oss');
     }
 }

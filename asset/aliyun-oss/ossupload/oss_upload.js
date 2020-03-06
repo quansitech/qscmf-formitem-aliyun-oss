@@ -127,8 +127,8 @@ function initPlupload(browseButton,container,imgBox,inputName) {
         browse_button : browseButton, 
         multi_selection: false,
         container: document.getElementById(container),
-        flash_swf_url : '/Public/plupload-2.1.2/js/Moxie.swf',
-        silverlight_xap_url : '/Public/plupload-2.1.2/js/Moxie.xap',
+        flash_swf_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.swf")}',
+        silverlight_xap_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.xap")}',
         url : 'http://oss.aliyuncs.com',
 
         filters: {
@@ -226,8 +226,8 @@ function initPluploadMulti(browseButton,container,imgBox,inputName){
         browse_button : browseButton, 
         multi_selection: true,
         container: document.getElementById(container),
-        flash_swf_url : '{:asset("plupload-2.1.2/js/Moxie.swf")}',
-        silverlight_xap_url : '{:asset("plupload-2.1.2/js/Moxie.xap")}',
+        flash_swf_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.swf")}',
+        silverlight_xap_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.xap")}',
         url : 'http://oss.aliyuncs.com',
 
         filters: {

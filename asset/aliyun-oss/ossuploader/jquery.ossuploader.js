@@ -274,8 +274,8 @@
                  browse_button : setting.browse_button,
                  multi_selection: setting.uploader_multi_selection,
                  container: document.getElementById(div.id),
-                 flash_swf_url : '/Public/plupload-2.1.2/js/Moxie.swf',
-                 silverlight_xap_url : '/Public/plupload-2.1.2/js/Moxie.xap',
+                 flash_swf_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.swf")}',
+                 silverlight_xap_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.xap")}',
                  url : 'http://oss.aliyuncs.com',
   
                  filters: {

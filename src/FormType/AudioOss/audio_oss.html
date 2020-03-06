@@ -24,11 +24,12 @@
                 <span class="check-tips small">{$form.tip}</span>
             </notempty>
             <notdefined name="audio_oss">
-                <link rel="stylesheet" href="{:asset('audioplayer/audioplayer.css')}" />
+                <link rel="stylesheet" href="{:asset('aliyun-oss/audioplayer/audioplayer.css')}" />
                 
-                <script type="text/javascript" src="__PUBLIC__/plupload-2.1.2/js/plupload.full.min.js"></script>
-                <script type="text/javascript" src="__PUBLIC__/ossupload/oss_upload.js"></script>
-                <script src="{:asset('audioplayer/audioplayer.js')}"></script>
+                <script type="text/javascript" src="{:asset('aliyun-oss/plupload-2.1.2/js/plupload.full.min.js')}"></script>
+                <script type="text/javascript" src="{:asset('aliyun-oss/plupload-2.1.2/js/plupload.full.min.js')}"></script>
+                <script type="text/javascript" src="{:asset('aliyun-oss/ossupload/oss_upload.js')}"></script>
+                <script src="{:asset('aliyun-oss/audioplayer/audioplayer.js')}"></script>
                 <define name="audio_oss" value="1" />
             </notdefined>
             <script type="text/javascript">
@@ -38,8 +39,8 @@
                     browse_button : '{$gid}_selectfiles',
                     multi_selection: false,
                     container: document.getElementById('{$gid}'),
-                    flash_swf_url : '__PUBLIC__/plupload-2.1.2/js/Moxie.swf',
-                    silverlight_xap_url : '__PUBLIC__/plupload-2.1.2/js/Moxie.xap',
+                    flash_swf_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.swf")}',
+                    silverlight_xap_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.xap")}',
                     url : 'http://oss.aliyuncs.com',
 
                     filters: {
