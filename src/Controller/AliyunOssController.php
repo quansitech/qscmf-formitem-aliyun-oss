@@ -8,7 +8,6 @@ class AliyunOssController extends \Think\Controller{
 
     public function callBack(){
         $r = $this->_verify($body);
-        // todo 验证签名为何失败
         if($r === false){
             exit();
         }
@@ -133,7 +132,7 @@ class AliyunOssController extends \Think\Controller{
 
         $body = file_get_contents('php://input');
         $authStr = '';
-        $path = $_SERVER['REQUEST_URI'];
+        $path = REQUEST_URI;
         $pos = strpos($path, '?');
 
         if ($pos === false)
