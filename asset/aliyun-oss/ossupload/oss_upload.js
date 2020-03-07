@@ -45,7 +45,6 @@ function get_signature(url)
     now = timestamp = Date.parse(new Date()) / 1000; 
     body = send_request(url);
     var obj = eval ("(" + body + ")");
-    console.log(obj);
     host = obj['host'];
     policyBase64 = obj['policy'];
     accessid = obj['accessid'];
