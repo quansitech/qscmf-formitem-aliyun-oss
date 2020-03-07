@@ -43,7 +43,7 @@ ALIOSS_HOST=**********
   addFormItem('audios_id', 'audios_oss', '多个音频')
   ```
 
-  + file_oss/files_oss
+  + 上传文件：file_oss/files_oss
   
   ```php
   // file_oss为上传单个文件，files_oss为上传多个文件
@@ -54,7 +54,7 @@ ALIOSS_HOST=**********
   addFormItem('files_id', 'files_oss', '多个文件')
   ```
 
-  + picture_oss/pictures_oss
+  + 上传图片：picture_oss/pictures_oss
   
   ```php
   // picture_oss为上传单张图片，pictures_oss为上传多张图片
@@ -64,7 +64,8 @@ ALIOSS_HOST=**********
   addFormItem('picture_id', 'picture_oss', '单张图片', '', '', '', $extra_attr)
   addFormItem('pictures_id', 'pictures_oss', '多张图片')
   ```
-  + picture_oss_intercept/pictures_oss_intercept
+  
+  + 上传裁剪后的图片：picture_oss_intercept/pictures_oss_intercept
   
   ```php
   // picture_oss_intercept为上传单张裁剪后的图片，pictures_oss_intercept为上传多张裁剪后的图片
