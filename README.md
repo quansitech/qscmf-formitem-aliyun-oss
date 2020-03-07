@@ -70,9 +70,9 @@ ALIOSS_HOST=**********
   // picture_oss_intercept为上传单张裁剪后的图片，pictures_oss_intercept为上传多张裁剪后的图片
   
   $option = [
-      'type'=>'image', // 默认值
-      'width'=>120, // 默认值
-      'height'=>120 // 默认值
+      'type' => 'image', // 默认值
+      'width' => 1, // 裁剪框宽高比例，此为宽度，默认为1
+      'height' => 1 // 裁剪框宽高比例，此为高度，默认1
   ];
                       
   // 如没有特别需求，$option可不传
