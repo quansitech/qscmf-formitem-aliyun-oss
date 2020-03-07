@@ -4,6 +4,12 @@
   "type": "library",
   "keywords": ["thinkphp", "admin", "component", "formbuilder", "qscmf", "aliyun", "oss"],
   "license": "MIT",
+  "authors": [
+    {
+      "name": "xhiny",
+      "email": "axhiny@163.com"
+    }
+  ],
 
   "require": {
   "php": ">=7.2.0",
