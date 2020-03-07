@@ -31,8 +31,52 @@ ALIOSS_HOST=**********
 ),
 ```
 
-+ 使用
-```php
-addFormItem('file_id', 'file_oss', '文件'),
-```
++ 使用 
+  + 上传音频：audio_oss/audios_oss
+  
+  ```php
+  // audio_oss为上传单个音频，audios_oss为上传多个音频
+  
+  $extra_attr = 'data-url='.U('/extends/AliyunOss/policyGet', array('type' => 'audio')); // 默认值
+  // 如没有特别需求，$extra_attr可不传
+  addFormItem('audio_id', 'audio_oss', '单个音频', '', '', '', $extra_attr)
+  addFormItem('audios_id', 'audios_oss', '多个音频')
+  ```
+
+  + file_oss/files_oss
+  
+  ```php
+  // file_oss为上传单个文件，files_oss为上传多个文件
+   
+  $extra_attr = 'data-url='.U('/extends/AliyunOss/policyGet', array('type' => 'file')); // 默认值
+  // 如没有特别需求，$extra_attr可不传
+  addFormItem('file_id', 'file_oss', '单个文件', '', '', '', $extra_attr)
+  addFormItem('files_id', 'files_oss', '多个文件')
+  ```
+
+  + picture_oss/pictures_oss
+  
+  ```php
+  // picture_oss为上传单张图片，pictures_oss为上传多张图片
+  
+  $extra_attr = 'data-url='.U('/extends/AliyunOss/policyGet', array('type' => 'image')); // 默认值
+  // 如没有特别需求，$extra_attr可不传
+  addFormItem('picture_id', 'picture_oss', '单张图片', '', '', '', $extra_attr)
+  addFormItem('pictures_id', 'pictures_oss', '多张图片')
+  ```
+  + picture_oss_intercept/pictures_oss_intercept
+  
+  ```php
+  // picture_oss_intercept为上传单张裁剪后的图片，pictures_oss_intercept为上传多张裁剪后的图片
+  
+  $option = [
+      'type'=>'image', // 默认值
+      'width'=>120, // 默认值
+      'height'=>120 // 默认值
+  ];
+                      
+  // 如没有特别需求，$option可不传
+  addFormItem('cover', 'picture_oss_intercept', '单张裁剪后的图片', '', $option)
+  addFormItem('covers', 'pictures_oss_intercept', '多张裁剪后的图片')
+  ```
 
