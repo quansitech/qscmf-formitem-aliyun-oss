@@ -27,10 +27,10 @@
         </div>        <notempty name="form.tip">
             <span class="check-tips small">{$form.tip}</span>
         </notempty>
-        <notdefined name="file_oss">
+        <notdefined name="files_oss">
             <script type="text/javascript" src="{:asset('aliyun-oss/plupload-2.1.2/js/plupload.full.min.js')}"></script>
             <script type="text/javascript" src="{:asset('aliyun-oss/ossupload/oss_upload.js')}"></script>
-            <define name="file_oss" value="1" />
+            <define name="files_oss" value="1" />
         </notdefined>
         <script type="text/javascript">
             new plupload.Uploader({

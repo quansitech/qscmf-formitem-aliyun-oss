@@ -2,12 +2,15 @@
     <div class="form-group item_{$form.name} {$form.extra_class}">
         <label class="left control-label">{$form.title}：</label>
         <div class="right">
+            <notdefined name="pictures_oss_intercept">
             <link rel="stylesheet" href="{:asset('aliyun-oss/ossuploader/jquery.ossuploader.css')}">
             <link rel="stylesheet" href="{:asset('aliyun-oss/cropper/cropper.min.css')}">
             <script type="text/javascript" src="{:asset('aliyun-oss/cropper/cropper.js')}"></script>
             <script type="text/javascript" src="{:asset('aliyun-oss/plupload-2.1.2/js/moxie.js')}"></script>
             <script type="text/javascript" src="{:asset('aliyun-oss/plupload-2.1.2/js/plupload.dev.js')}"></script>
             <script type="text/javascript" src="{:asset('aliyun-oss/ossuploader/jquery.ossuploader.js')}"></script>
+            <define name="pictures_oss_intercept" value="1" />
+            </notdefined>
             <php>
                 $default_opt=array(
                     'type'=>'image',

@@ -27,14 +27,14 @@
             <notempty name="form.tip">
                 <span class="check-tips small">{$form.tip}</span>
             </notempty>
-            <notdefined name="audio_oss">
+            <notdefined name="audios_oss">
                 <link rel="stylesheet" href="{:asset('aliyun-oss/audioplayer/audioplayer.css')}" />
                 
                 <script type="text/javascript" src="{:asset('aliyun-oss/plupload-2.1.2/js/plupload.full.min.js')}"></script>
                 <script type="text/javascript" src="{:asset('aliyun-oss/plupload-2.1.2/js/plupload.full.min.js')}"></script>
                 <script type="text/javascript" src="{:asset('aliyun-oss/ossupload/oss_upload.js')}"></script>
                 <script src="{:asset('aliyun-oss/audioplayer/audioplayer.js')}"></script>
-                <define name="audio_oss" value="1" />
+                <define name="audios_oss" value="1" />
             </notdefined>
             <script type="text/javascript">
                 $('#{$gid}_preview .audio_oss').audioPlayer();
