@@ -1,6 +1,12 @@
 # qscmf-formitem-aliyun-oss
 上传文件至阿里云OSS组件
 
+#### 安装
+
+```php
+composer require quansitech/qscmf-formitem-aliyun-oss
+```
+
 #### 如何使用
 + 修改.env，设置相关配置
 ```blade
