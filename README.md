@@ -87,3 +87,118 @@ ALIOSS_HOST=**********
   addFormItem('covers', 'pictures_oss_intercept', '多张裁剪后的图片')
   ```
 
+
+  ## <a name="oss_uploader">oss_uploader oss上传图片</a>
+  
+  ### 介绍
+  
+  图片裁剪上传功能,内置cropper.js,可配置是否裁剪,可配置oss。
+  
+  ### 功能：
+  
+  * 可配置使用oss
+  * 可配置是否裁剪
+  * 可以定义裁剪尺寸,裁剪比例
+  * 限制上传张数
+  * 可自定义提示函数
+  
+  ### 初始化调用
+  
+  ```console
+  $(selector).ossuploader(option); //selector 为隐藏域
+  
+  option: {
+      url:                //string require  上传图片的地址
+      multi_selection:    //boolean optional 是否多选
+      oss:                //boolean optional 是否启用oss
+      crop:{              //object optional cropper配置,若存在此项，则裁剪图片,更多配置请参考cropper.js官网
+          aspectRatio: 120/120,
+          viewMode: 1,
+          ready: function () { 
+              croppable = true;
+          }
+      },
+      show_msg:           //function optional 展示提示消息的函数,默认为window.alert
+      limit:              //number optional 上传图片张数的限制,默认值32
+      beforeUpload:       //function optional 回调 参考回调说明
+      uploadCompleted:    //function optional 回调 参考回调说明
+  }
+  ```
+  备注:
+  1. cropper：
+      - <a href="https://fengyuanchen.github.io/cropper/">官网demo</a>  
+      - <a href="https://github.com/fengyuanchen/cropper/blob/master/README.md">github</a>
+  
+  2. 回调说明:
+      - beforeUpload : 当选中文件时的回调。若返回false,则不添加选中的文件
+      - uploadCompleted : 上传成功的回调
+  
+  ## <a name="oss_extend_desc">oss_upload_extend oss上传扩展</a>
+  
+  ### 介绍
+  
+  基于oss上传插件，对上传插件的回调进行扩展，增强oss插件上传功能
+  
+  ### 功能：
+  
+  * 可以组合添加拓展
+  * 可以对扩展进行排序
+  * <a href="#preventUpload">内置preventUpload扩展</a>
+  * 根据oss_upload的回调,添加各自的回调
+  
+  
+  ### 初始化调用
+  
+  ```console
+  $(selector).ossuploaderWrapper(option[, extend]); //selector 为隐藏域
+  option: object require 原oss上传插件的option
+  extend: string_array optional 扩展名
+  ```
+  
+  链接：
+  * <a href="oss_uploader">oss_uploader</a>  
+  * 扩展名: <a href="#extend_desc">扩展介绍</a>
+  
+  
+  ## 扩展说明
+  ### 执行逻辑
+  * 根据传入的extend进行排序
+  * 把extend遍历,从conf中取出要扩展的配置
+  * 把配置中的回调放到相应的队列中
+  * 当触发相应的回调,则执行相应队列中的函数 
+  * 若队列中有函数返回false,则队列后面的函数都不执行
+  
+  ### <a name="extend_desc">内置扩展介绍</a>
+  
+  #### <a name="preventUpload">preventUpload</a>(默认扩展)
+  上传图片的过程中,隐藏域所在的form
+  * 会禁止submit事件(submit事件禁止且提示图片上传中)
+  * type为submit 的按钮会显示为上传中，当上传完成会恢复原来的描述
+  ```console
+  $(selector).ossuploaderWrapper(option, ['preventUpload']); //selector 为隐藏域
+  ```
+  
+  ### 添加自定义扩展
+  
+  conf 对象内置了preventUpload扩展  
+  
+  往conf对象加属性对象，实现扩展的功能 
+  
+  ```console
+  var conf = {
+      myExtend: {
+          invoke: function(){
+                  return {};
+              } || {} //require
+          order: number, // >=2,optional
+      }
+  };
+  ```
+  * invoke 属性必须为<code>返回对象的函数</code>或<code>纯对象</code>  
+    <code>返回对象</code>或<code>纯对象</code>属性包含回调,如 beforeUpload,uploadCompleted 等
+    扩展的回调队列中，任意一个函数返回false,都会停止执行后续回调   
+  
+  * order属性为插件的调用排序,值越小调用顺序越早;  
+    由于preventUpload扩展(内置扩展)的order为 1,  
+    其他默认内置扩展大于1，
+    非默认内置扩展大于100。
