@@ -45,7 +45,6 @@
 	};
 	$.fn.ossuploaderWrapper = function (option, extend) {
 		extend = Array.isArray(extend) ? extend : ['preventUpload'];
-		option.show_msg = option.show_msg || window.alert;
 		var that = this;
 		
 		var cbFn = {};
