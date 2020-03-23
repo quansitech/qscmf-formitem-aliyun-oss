@@ -99,6 +99,7 @@ ALIOSS_HOST=**********
   * 可配置使用oss
   * 可配置是否裁剪
   * 可以定义裁剪尺寸,裁剪比例
+  * 可以定义限制文件后缀、大小以及是否允许选取重复文件
   * 限制上传张数
   * 可自定义提示函数
   
@@ -119,9 +120,9 @@ ALIOSS_HOST=**********
           }
       },
       filters: {
-           mime_types: // 限制文件后缀，参考格式： [{ title : "Image files", extensions : "jpg,gif,png,bmp,jpeg" }]
-           max_file_size: null // 限制文件大小，参考格式："10mb"
-           prevent_duplicates: false // 是否允许选取重复文件，false：是，true 否，默认为false
+           mime_types:          // Array 限制文件后缀，参考格式： [{ title : "Image files", extensions : "jpg,gif,png,bmp,jpeg" }]
+           max_file_size:       // String|Number 限制文件大小，参考格式："10mb"
+           prevent_duplicates:  // Boolean 是否允许选取重复文件，false：是，true 否，默认为false
       },
       show_msg:           //function optional 展示提示消息的函数,默认为window.alert
       limit:              //number optional 上传图片张数的限制,默认值32
