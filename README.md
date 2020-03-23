@@ -118,6 +118,11 @@ ALIOSS_HOST=**********
               croppable = true;
           }
       },
+      filters: {
+           mime_types: // 限制文件后缀，参考格式： [{ title : "Image files", extensions : "jpg,gif,png,bmp,jpeg" }]
+           max_file_size: null // 限制文件大小，参考格式："10mb"
+           prevent_duplicates: false // 是否允许选取重复文件，false：是，true 否，默认为false
+      },
       show_msg:           //function optional 展示提示消息的函数,默认为window.alert
       limit:              //number optional 上传图片张数的限制,默认值32
       beforeUpload:       //function optional 回调 参考回调说明
