@@ -274,6 +274,12 @@
               }
               parent.replaceChild(div, o);
               o = null;
+
+              if (!setting.filters){
+                  setting.filters = {
+                      prevent_duplicates : false //允许选取重复文件
+                  }
+              }
   
               var pluploaduploader = new plupload.Uploader({
                  runtimes : 'html5,flash,silverlight,html4',
@@ -283,15 +289,10 @@
                  flash_swf_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.swf")}',
                  silverlight_xap_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.xap")}',
                  url : 'http://oss.aliyuncs.com',
-  
-                 filters: {
-                     // mime_types : [ //只允许上传图片
-                     // { title : "Image files", extensions : "jpg,gif,png,bmp,jpeg" },
-                     // ],
-                     prevent_duplicates : false //允许选取重复文件
-                 },
-  
-                 init: {
+
+                 filters:setting.filters,
+
+                  init: {
                      PostInit: function() {
                          //$('#'+container).children('.uploadify-queue').html('');
                      },
@@ -372,22 +373,19 @@
                      },
 
                      Error: function(up, err) {
-                         // if (err.code == -600) {
-                         //     setting.show_msg("选择的文件太大了,可以根据应用情况，在upload.js 设置一下上传的最大大小");
-                         // }
-                         // else if (err.code == -601) {
-                         //     setting.show_msg("选择的文件后缀不对,可以根据应用情况，在upload.js进行设置可允许的上传文件类型");
-                         // }
-                         // else if (err.code == -602) {
-                         //     setting.show_msg("这个文件已经上传过一遍了");
-                         // }
-                         // else if(err.code == -200){
-                         //     setting.show_msg('文件太大了');
-                         // }
-                         // else
-                         // {
+                         if (err.code == -600) {
+                             setting.show_msg("选择的文件太大了,可以根据应用情况，在upload.js 设置一下上传的最大大小");
+                         }
+                         else if (err.code == -601) {
+                             setting.show_msg("选择的文件后缀不对,可以根据应用情况，在upload.js进行设置可允许的上传文件类型");
+                         }
+                         else if (err.code == -602) {
+                             setting.show_msg("这个文件已经上传过一遍了");
+                         }
+                         else
+                         {
                             setting.show_msg(err.response);
-                         // }
+                         }
                      }
                  }
              });
