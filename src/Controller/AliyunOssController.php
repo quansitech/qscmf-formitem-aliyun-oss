@@ -24,8 +24,12 @@ class AliyunOssController extends \Think\Controller{
                 $this->ajaxReturn(array('err_msg' => '上传的文件类型不符合要求'));
             }
         }
+        if ($body_arr['title']){
+            $file_data['title'] = $body_arr['title'];
+        }else {
+            $file_data['title'] = end(explode('/', $body_arr['filename']));
+        }
 
-        $file_data['title'] = end(explode('/', $body_arr['filename']));
         $file_data['url'] = $config['oss_host'] . '/' . $body_arr['filename'] . ($config['oss_style'] ? $config['oss_style'] : '');
         $file_data['size'] = $body_arr['size'];
         $file_data['cate'] = $body_arr['upload_type'];
@@ -52,6 +56,9 @@ class AliyunOssController extends \Think\Controller{
         $callback_param = array('callbackUrl'=>$callbackUrl,
                  'callbackBody'=>'filename=${object}&size=${size}&mimeType=${mimeType}&upload_type=${x:upload_type}',
                  'callbackBodyType'=>"application/x-www-form-urlencoded");
+        if (I('get.title')){
+            $callback_param['callbackBody'].='&title=${x:title}';
+        }
         $callback_string = json_encode($callback_param);
         $base64_callback_body = base64_encode($callback_string);
         $now = time();
@@ -81,7 +88,11 @@ class AliyunOssController extends \Think\Controller{
         $string_to_sign = $base64_policy;
         $signature = base64_encode(hash_hmac('sha1', $string_to_sign, C('ALIOSS_ACCESS_KEY_SECRET'), true));
 
-        $callback_var = json_encode(array('x:upload_type' => $type));
+        $callback_var = array('x:upload_type' => $type);
+        if (I('get.title')){
+            $callback_var['x:title'].=I('get.title');
+        }
+        $callback_var=json_encode($callback_var);
 
         $response = array();
         $response['accessid'] = C('ALIOSS_ACCESS_KEY_ID');

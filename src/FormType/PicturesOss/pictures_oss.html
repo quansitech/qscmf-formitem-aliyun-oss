@@ -62,7 +62,7 @@
                         },
 
                         BeforeUpload: function(up, file) {
-                            set_upload_param(up, file.name, false, $('#upload_{$gid}').data('url'));
+                            set_upload_param(up, file.name, false, $('#upload_{$gid}').data('url'),'title='+file.name);
                         },
 
                         UploadProgress: function(up, file) {
