@@ -326,7 +326,7 @@
   
                      BeforeUpload: function(up, file) {
                          if(setting.oss == true){
-                             set_upload_param(up, file.name, false, setting.url, 'title='+file.name);
+                             set_upload_param(up, file.name, false, setting.url, 'title='+encodeURIComponent(file.name));
                          }
                          else{
                              up.setOption({
