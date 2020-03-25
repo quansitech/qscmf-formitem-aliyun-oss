@@ -176,7 +176,7 @@
                if (ret == false)
                {
                    if (extra_query){
-                       url+='?'+extra_query;
+                       url+='&'+extra_query;
                    }
                    ret = get_signature(url);
                }
