@@ -172,9 +172,12 @@
                g_object_name = key + suffix;
            }
   
-           var set_upload_param = function(up, filename, ret, url){
+           var set_upload_param = function(up, filename, ret, url, extra_query){
                if (ret == false)
                {
+                   if (extra_query){
+                       url+=(url.indexOf('?')===-1?'?':'&')+extra_query;
+                   }
                    ret = get_signature(url);
                }
                g_object_name = key;
@@ -323,7 +326,7 @@
   
                      BeforeUpload: function(up, file) {
                          if(setting.oss == true){
-                             set_upload_param(up, file.name, false, setting.url);
+                             set_upload_param(up, file.name, false, setting.url, 'title='+encodeURIComponent(file.name));
                          }
                          else{
                              up.setOption({
