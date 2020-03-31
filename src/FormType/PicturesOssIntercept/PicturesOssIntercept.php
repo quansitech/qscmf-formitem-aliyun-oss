@@ -6,7 +6,7 @@ use Think\View;
 
 class PicturesOssIntercept implements FormType {
 
-    public function build($form_type){
+    public function build(array $form_type){
         $view = new View();
         $view->assign('form', $form_type);
         $content = $view->fetch(__DIR__ . '/pictures_oss_intercept.html');
