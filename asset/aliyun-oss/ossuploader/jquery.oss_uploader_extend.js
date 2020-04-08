@@ -5,7 +5,8 @@
 			invoke: function(option){
 				var $form = $(this).parents('form');
 				var $submitBtn = $form.find('button[type=submit]');
-				if(!$submitBtn.length){
+				var uploadCountField = 'oss-submit-disabled-times';
+				if(!$submitBtn.length || !$form.length){
 					return false;
 				}
 				var submitBtnTxt = $submitBtn.text();
@@ -14,6 +15,33 @@
 					var tips = '图片上传中';
 					option.show_msg(tips);
 					return false;
+				};
+				
+				var offSubmit = function () {
+					if($submitBtn.data('oss-submit-disabled')){
+						$submitBtn.attr({
+							disabled: false,
+						});
+					}
+					$submitBtn.text(submitBtnTxt).data('oss-submit-disabled','');
+					$form.off('submit',preventSubmit);
+					return true;
+				};
+				
+				var getDisabledTimes = function () {
+					var r = parseInt($submitBtn.data(uploadCountField)) || 0;
+					return Math.max(r, 0);
+				};
+				
+				var handleFinish = function (option) {
+					var disabledTimes = getDisabledTimes();
+					disabledTimes--;
+					disabledTimes = Math.max(disabledTimes, 0);
+					$submitBtn.data(uploadCountField, disabledTimes);
+					if(disabledTimes <= 0){
+						return offSubmit();
+					}
+					return true;
 				};
 				
 				return {
@@ -26,19 +54,24 @@
 							disabled: true,
 						}).text('上传中');
 						
+						var disabledTimes = getDisabledTimes();
+						disabledTimes++;
+						$submitBtn.data(uploadCountField, disabledTimes);
+						
 						$form.on('submit',preventSubmit);
 						return true;
 					},
-					uploadCompleted: function(){
-						if($submitBtn.data('oss-submit-disabled')){
-							$submitBtn.attr({
-								disabled: false,
-							});
+					uploadError: handleFinish,
+					filePerUploaded: handleFinish,
+					deleteFile: function (option, isUploadComplete) {
+						if(isUploadComplete === false){
+							handleFinish();
+							var disabledTimes = getDisabledTimes();
+							disabledTimes++;
+							$submitBtn.data(uploadCountField,disabledTimes);
 						}
-						$submitBtn.text(submitBtnTxt).data('oss-submit-disabled','');
-						$form.off('submit',preventSubmit);
 						return true;
-					}
+					},
 				};
 			}
 		},
@@ -73,8 +106,10 @@
 		
 		var runCallbackQueue = function (cbArr) {
 			return function () {
+				var args = [].slice.call(arguments);
+				args.unshift(option);
 				for(var j = 0; j < cbArr.length;j++){
-					if(!cbArr[j].call(that, option)){
+					if(cbArr[j].apply(that, args) === false){
 						return false;
 					}
 				}
