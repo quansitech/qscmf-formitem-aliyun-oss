@@ -238,7 +238,7 @@
         //upload_flag false 数据读取流程
         var add_img = function (parent_div, id, src, upload_flag, file_id, is_upload_complete) {
             is_upload_complete = is_upload_complete || false;
-            var htmlEL = $('<div class="ossuploader-dash-border" id="' + id + '"><img src="' + src + '" alt=""><i class="ossuploader-icon-upload-complete"></i><canvas class="ossuploader-progress-canvas"></canvas><span class="ossuploader-progress"></span><span class="ossuploader-filedelete"></span></div>');
+            var htmlEL = $('<div class="ossuploader-dash-border" id="' + id + '"><img src="' + src + '" alt=""><i class="ossuploader-icon-upload-complete"></i><canvas class="ossuploader-progress-canvas"></canvas><span class="ossuploader-progress-desc"></span><span class="ossuploader-progress"></span><span class="ossuploader-filedelete"></span></div>');
             if (upload_flag == true && !setting.multi_selection) {
                 $(parent_div).children('.ossuploader-dash-border').remove();
             }
@@ -394,6 +394,7 @@
                             reader.onload = function (e) {
                                 add_img(div, file.id, e.target.result, true);
                                 currentIds[file.id] = file.id;
+                                $('#' + file.id).find('.ossuploader-progress-desc').text('准备上传');
                             };
                         });
                         up.start();
@@ -413,13 +414,26 @@
                     UploadProgress: function (up, file) {
                         // var el = $('#' + file.id).children('.ossuploader-progress');
                         // el.css('width', file.percent + '%');
-                        updateUploadProgress($('#' + file.id).find('canvas').get(0), file.percent);
+                        var $el = $('#' + file.id);
+                        var uploadProgressDesc = '';
+                        updateUploadProgress($el.find('canvas').get(0), file.percent);
+                        if(file.percent >= 100){
+                            uploadProgressDesc = '转码中';
+                        }else{
+                            uploadProgressDesc = file.percent + '%';
+                        }
+                        $el.find('.ossuploader-progress-desc').text(uploadProgressDesc);
                     },
                     
                     FileUploaded: function (up, file, info) {
                         if (setting.filePerUploaded && typeof setting.filePerUploaded == "function") {
                             setting.filePerUploaded();
                         }
+    
+                        var $el = $('#' + file.id);
+    
+                        $el.find('.ossuploader-progress-desc').hide();
+                        
                         //若上传的过程中 该文件被删除
                         //则不把file_id 添加到隐藏域
                         if (!currentIds[file.id]) {
@@ -427,11 +441,12 @@
                             return true;
                         }
                         
+                        
                         if (info.status == 200) {
                             var response = JSON.parse(info.response);
                             if (response.err_msg) {
                                 setting.show_msg(response.err_msg);
-                                $('#' + file.id).remove();
+                                $el.remove();
                                 currentFileLength--;
                                 return false;
                             } else {
@@ -449,12 +464,12 @@
                             }
                         } else {
                             setting.show_msg(info.response);
-                            $('#' + file.id).remove();
+                            $el.remove();
                             currentFileLength--;
                             return false;
                         }
-                        
-                        $('#' + file.id).addClass('ossuploader-complete');
+    
+                        $el.addClass('ossuploader-complete');
                         
                         file_count++;
                         if (files_length === file_count && setting.uploadCompleted && typeof setting.uploadCompleted == "function") {
