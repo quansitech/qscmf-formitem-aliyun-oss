@@ -120,12 +120,12 @@ ALIOSS_HOST=**********
           }
       },
       filters: {
-           mime_types:          // Array 限制文件后缀，参考格式： [{ title : "Image files", extensions : "jpg,gif,png,bmp,jpeg" }]
+           check_image:         // Boolean 是否检查图片类型
            max_file_size:       // String|Number 限制文件大小，参考格式："10mb"，单位为字节,byte
            prevent_duplicates:  // Boolean 是否允许选取重复文件，false：是，true 否，默认为false
       },
       show_msg:           //function optional 展示提示消息的函数,默认为window.alert
-      limit:              //number optional 上传图片张数的限制,默认值32
+      limit:              //number   optional 上传图片张数的限制,默认值32
       beforeUpload:       //function optional 回调 参考回调说明
       uploadCompleted:    //function optional 回调 参考回调说明
   }
