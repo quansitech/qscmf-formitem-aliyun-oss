@@ -394,6 +394,7 @@
                             reader.onload = function (e) {
                                 add_img(div, file.id, e.target.result, true);
                                 currentIds[file.id] = file.id;
+                                $('#' + file.id).find('.ossuploader-progress-desc').text('准备上传');
                             };
                         });
                         up.start();
