@@ -48,7 +48,7 @@
 
                         FilesAdded: function(up, files) {
                             plupload.each(files, function(file) {
-                                var html = '<div id="' + file.id + '" class="uploadify-queue-item">' + 
+                                var html = '<div id="' + file.id + '" class="uploadify-queue-item">' +
                                         '<div class="uploadify-progress" lastloaded="0">' +
                                         '<div class="uploadify-progress-bar" style="width: 0%;">' +
                                         '</div>' +
@@ -57,7 +57,7 @@
                                         '<span class="up_filename">' + file.name + '</span>' +
                                         '</div>';
                                 $('#upload_{$gid}').children('.uploadify-queue').html(html);
-                                set_upload_param(up, file.name, false, $('#upload_{$gid}').data('url'));
+                                set_upload_param(up, file.name, false, $('#upload_{$gid}').data('url'),'title='+encodeURIComponent(file.name));
                             });
                             
                         },

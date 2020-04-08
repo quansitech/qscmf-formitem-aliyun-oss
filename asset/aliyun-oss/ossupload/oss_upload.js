@@ -72,10 +72,13 @@ function calculate_object_name(filename)
     g_object_name = key + suffix;
 }
 
-function set_upload_param(up, filename, ret, url)
+function set_upload_param(up, filename, ret, url, extra_query)
 {
     if (ret == false)
     {
+        if (extra_query){
+            url+=(url.indexOf('?')===-1?'?':'&')+extra_query;
+        }
         ret = get_signature(url);
     }
     g_object_name = key;
