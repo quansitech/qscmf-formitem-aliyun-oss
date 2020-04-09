@@ -119,15 +119,20 @@ ALIOSS_HOST=**********
               croppable = true;
           }
       },
-      filters: {
+      //由于plup_upload内置的filter,出错时会触发Error回调
+      //导致上一个上传任务的失败,自定义了 check_image,limit_file_size,用于前端验证文件后缀格式与文件大小
+      filters: {                // object optional
            check_image:         // Boolean 是否检查图片类型
-           max_file_size:       // String|Number 限制文件大小，参考格式："10mb"，单位为字节,byte
+           limit_file_size:     // Number 限制文件大小，参考格式：5 * 1024 * 1024
            prevent_duplicates:  // Boolean 是否允许选取重复文件，false：是，true 否，默认为false
       },
       show_msg:           //function optional 展示提示消息的函数,默认为window.alert
       limit:              //number   optional 上传图片张数的限制,默认值32
       beforeUpload:       //function optional 回调 参考回调说明
+      filePerUploaded:    //function optional 回调 参考回调说明
       uploadCompleted:    //function optional 回调 参考回调说明
+      uploadError:        //function optional 回调 参考回调说明
+      deleteFile:         //function optional 回调 参考回调说明
   }
   ```
   备注:
@@ -137,7 +142,10 @@ ALIOSS_HOST=**********
   
   2. 回调说明:
       - beforeUpload : 当选中文件时的回调。若返回false,则不添加选中的文件
-      - uploadCompleted : 上传成功的回调
+      - filePerUploaded : 每个文件上传完成，都会触发此回调
+      - uploadCompleted : 若多选上传选中3个图，则3个图完成上传才触发此回调
+      - uploadError : 上传出错
+      - deleteFile : 删除图片
   
   ## <a name="oss_extend_desc">oss_upload_extend oss上传扩展</a>
   
