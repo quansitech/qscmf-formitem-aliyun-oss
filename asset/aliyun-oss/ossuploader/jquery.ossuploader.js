@@ -3,10 +3,11 @@
         alert(msg);
     };
     
-    var checkFileIsImage = function(fileName){
+    var checkFileIsImage = function(fileName, allow_no_ext){
+        allow_no_ext = typeof allow_no_ext === 'undefined' ? true : allow_no_ext;
         fileName = String(fileName);
         //有的图片没有后缀
-        if(fileName.indexOf('.') === -1){
+        if(allow_no_ext && fileName.indexOf('.') === -1){
             return true;
         }
         var ext = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
@@ -134,15 +135,18 @@
             },
             limit: 32,
             filters: {
-                prevent_duplicates: false //允许选取重复文件
-            }
+                prevent_duplicates: false, //允许选取重复文件
+                check_image: false, //是否检查文件后缀
+                limit_file_size: 5 * 1024 * 1024, //是否检查文件大小
+            },
         };
         
         if (!option.filters) {
             option.filters = {};
         }
-        option.filters = $.extend({},defaultSetting.filters, option.filters);
         
+        option.filters = $.extend({},defaultSetting.filters, option.filters);
+    
         var setting = $.extend({},defaultSetting, option);
         show_msg = setting.show_msg;
         
@@ -236,8 +240,7 @@
         
         //upload_flag true 为文件上传流程
         //upload_flag false 数据读取流程
-        var add_img = function (parent_div, id, src, upload_flag, file_id, is_upload_complete) {
-            is_upload_complete = is_upload_complete || false;
+        var add_img = function (parent_div, id, src, upload_flag, file_id) {
             var htmlEL = $('<div class="ossuploader-dash-border" id="' + id + '"><img src="' + src + '" alt=""><i class="ossuploader-icon-upload-complete"></i><canvas class="ossuploader-progress-canvas"></canvas><span class="ossuploader-progress-desc"></span><span class="ossuploader-progress"></span><span class="ossuploader-filedelete"></span></div>');
             if (upload_flag == true && !setting.multi_selection) {
                 $(parent_div).children('.ossuploader-dash-border').remove();
@@ -245,8 +248,6 @@
             
             if (upload_flag == false && file_id) {
                 htmlEL.attr('data-fileid', file_id);
-            }
-            if (is_upload_complete) {
                 htmlEL.addClass('ossuploader-complete');
             }
             $(parent_div).append(htmlEL);
@@ -350,7 +351,7 @@
                     
                     var id = new Date().getTime();
                     id = id + values[n];
-                    add_img(div, id, srcs[n], false, values[n], true);
+                    add_img(div, id, srcs[n], false, values[n]);
                 }
                 clone_o.removeAttribute("data-srcjson");
             }
@@ -432,8 +433,6 @@
     
                         var $el = $('#' + file.id);
     
-                        $el.find('.ossuploader-progress-desc').hide();
-                        
                         //若上传的过程中 该文件被删除
                         //则不把file_id 添加到隐藏域
                         if (!currentIds[file.id]) {
@@ -476,13 +475,18 @@
                             setting.uploadCompleted();
                         }
                     },
+    
+                    FileFiltered: function(up, file) {
+                        file.msg && setting.show_msg(file.msg);
+                    },
                     
                     Error: function (up, err, c, d) {
                         if (setting.uploadError && typeof setting.uploadError == "function") {
                             setting.uploadError(up, err);
                         }
                         $('#' + err.file.id).remove();
-                        
+                        currentFileLength--;
+    
                         if (err.code == -600) {
                             setting.show_msg("上传的文件太大,请重新上传");
                             // setting.show_msg("选择的文件太大了,可以根据应用情况，在upload.js 设置一下上传的最大大小");
@@ -536,17 +540,32 @@
                 }
             });
         };
-        
+    
         plupload.addFileFilter('check_image', function(filter, file, cb) {
             if(!filter){
                 cb(true);
+                return true;
             }
-            var result = checkFileIsImage(file.name);
+            var result = checkFileIsImage(file.name, false);
             if (!result) {
-                this.trigger('Error', {
-                    code : plupload.FILE_EXTENSION_ERROR,
-                    message : plupload.translate('File extension error.'),
-                    file : file
+                this.trigger('FileFiltered', {
+                    file : file,
+                    msg: '选择的文件后缀不对,请上传允许的上传文件类型'
+                });
+            }
+            cb(result);
+        });
+    
+        plupload.addFileFilter('limit_file_size', function(filter, file, cb) {
+            if(!filter){
+                cb(true);
+                return true;
+            }
+            var result = file.size <= filter;
+            if (!result) {
+                this.trigger('FileFiltered', {
+                    file : file,
+                    msg: '上传的文件太大,请重新上传'
                 });
             }
             cb(result);
