@@ -122,7 +122,7 @@ ALIOSS_HOST=**********
       //由于plup_upload内置的filter,出错时会触发Error回调
       //导致上一个上传任务的失败,自定义了 check_image,limit_file_size,用于前端验证文件后缀格式与文件大小
       filters: {                // object optional
-           check_image:         // Boolean 是否检查图片类型
+           check_image:         // Boolean 是否检查图片类型(若为true: 对于裁剪上传,允许无后缀文件;多选上传,不允许无后缀文件)
            limit_file_size:     // Number 限制文件大小，参考格式：5 * 1024 * 1024
            prevent_duplicates:  // Boolean 是否允许选取重复文件，false：是，true 否，默认为false
       },
