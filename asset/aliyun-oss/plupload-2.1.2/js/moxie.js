@@ -6132,10 +6132,11 @@ define("moxie/runtime/html5/Runtime", [
 					return I.can('slice_blob') && I.can('send_multipart');
 				},
 				summon_file_dialog: Test(function() { // yeah... some dirty sniffing here...
-					return (Env.browser === 'Firefox' && Env.version >= 4) ||
-						(Env.browser === 'Opera' && Env.version >= 12) ||
-						(Env.browser === 'IE' && Env.version >= 10) ||
-						!!~Basic.inArray(Env.browser, ['Chrome', 'Safari']);
+					// return (Env.browser === 'Firefox' && Env.version >= 4) ||
+					// 	(Env.browser === 'Opera' && Env.version >= 12) ||
+					// 	(Env.browser === 'IE' && Env.version >= 10) ||
+					// 	!!~Basic.inArray(Env.browser, ['Chrome', 'Safari']);
+					return true;
 				}()),
 				upload_filesize: True
 			}, 
