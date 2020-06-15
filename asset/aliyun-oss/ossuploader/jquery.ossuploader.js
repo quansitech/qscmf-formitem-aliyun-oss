@@ -3,6 +3,16 @@
         alert(msg);
     };
     
+    var get_suffix = function (filename) {
+        filename = String(filename);
+        pos = filename.lastIndexOf('.');
+        suffix = '';
+        if (pos !== -1) {
+            suffix = filename.substring(pos);
+        }
+        return suffix;
+    }
+    
     var checkFileIsImage = function(fileName, allow_no_ext){
         allow_no_ext = typeof allow_no_ext === 'undefined' ? true : allow_no_ext;
         fileName = String(fileName);
@@ -10,7 +20,7 @@
         if(allow_no_ext && fileName.indexOf('.') === -1){
             return true;
         }
-        var ext = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
+        var ext = get_suffix(fileName);
         return Boolean(ext.match(/.png|.jpg|.jpeg|.gif|.bmp|.svg/));
     };
     
@@ -133,6 +143,7 @@
             show_msg: function (msg) {
                 alert(msg);
             },
+            type: 'image',
             limit: 32,
             filters: {
                 prevent_duplicates: false, //允许选取重复文件
@@ -146,7 +157,7 @@
         }
         
         option.filters = $.extend({},defaultSetting.filters, option.filters);
-    
+        
         var setting = $.extend({},defaultSetting, option);
         show_msg = setting.show_msg;
         
@@ -184,15 +195,6 @@
             oss_meta = obj['oss_meta'];
             key = obj['dir'];
             return true;
-        }
-        
-        var get_suffix = function (filename) {
-            pos = filename.lastIndexOf('.');
-            suffix = '';
-            if (pos != -1) {
-                suffix = filename.substring(pos);
-            }
-            return suffix;
         }
         
         var calculate_object_name = function (filename) {
@@ -252,6 +254,31 @@
             }
             $(parent_div).append(htmlEL);
             updateDashBorderInfo(parent_div);
+        };
+        
+        //upload_flag true 为文件上传流程
+        //upload_flag false 数据读取流程
+        var add_file = function (parent_div, id, src, upload_flag, file_id) {
+            var fileName = typeof src.name === "undefined" ? src : src.name;
+            var file_suffix = get_suffix(fileName || src).slice(1,5);
+            var htmlEL = $('<div class="ossuploader-file" id="' + id + '"><span class="ossuploader-file-suffix">'+ file_suffix +'</span><span class="ossuploader-file-file-name" title="'+ fileName +'">'+ fileName +'</span><span class="ossuploader-progress"><span class="ossuploader-progress-inner"></span></span><span class="ossuploader-progress-desc"></span><i class="ossuploader-icon-upload-complete"></i><span class="ossuploader-filedelete"></span></div>');
+            if (upload_flag == true && !setting.multi_selection) {
+                $(parent_div).children('.ossuploader-file-group').empty();
+            }
+            
+            if (upload_flag == false && file_id) {
+                htmlEL.attr('data-fileid', file_id);
+                htmlEL.addClass('ossuploader-complete');
+            }
+            $(parent_div).find('.ossuploader-file-group').append(htmlEL);
+        };
+        
+        var add_upload_item = function () {
+            if(setting.type === 'image'){
+                add_img.apply(null, arguments);
+            }else{
+                add_file.apply(null, arguments);
+            }
         };
         
         //获取元素宽高获取斜边长度
@@ -333,13 +360,17 @@
             var i = document.createElement('i');
             var p = document.createElement('p');
             
-            p.innerText = '添加图片';
+            p.innerText = setting.type === 'file' ? '添加文件': '添加图片';
             
             div_add.appendChild(i);
             div_add.appendChild(p);
             
             div.appendChild(div_add);
             div.appendChild(clone_o);
+            
+            if(setting.type === 'file'){
+                $(div).append('<div class="ossuploader-file-group"></div>');
+            }
             
             var values, srcs;
             values = o.value.split(',');
@@ -351,7 +382,7 @@
                     
                     var id = new Date().getTime();
                     id = id + values[n];
-                    add_img(div, id, srcs[n], false, values[n]);
+                    add_upload_item(div, id, srcs[n], false, values[n]);
                 }
                 clone_o.removeAttribute("data-srcjson");
             }
@@ -390,13 +421,19 @@
                         currentFileLength += files.length;
                         files_length += files.length;
                         plupload.each(files, function (file) {
-                            var reader = new FileReader();
-                            reader.readAsDataURL(file.getNative());
-                            reader.onload = function (e) {
-                                add_img(div, file.id, e.target.result, true);
+                            if(setting.type === 'image'){
+                                var reader = new FileReader();
+                                reader.readAsDataURL(file.getNative());
+                                reader.onload = function (e) {
+                                    add_upload_item(div, file.id, e.target.result, true);
+                                    currentIds[file.id] = file.id;
+                                    $('#' + file.id).find('.ossuploader-progress-desc').text('准备上传');
+                                };
+                            }else{
+                                add_upload_item(div, file.id, file, true);
                                 currentIds[file.id] = file.id;
                                 $('#' + file.id).find('.ossuploader-progress-desc').text('准备上传');
-                            };
+                            }
                         });
                         up.start();
                     },
@@ -418,8 +455,9 @@
                         var $el = $('#' + file.id);
                         var uploadProgressDesc = '';
                         updateUploadProgress($el.find('canvas').get(0), file.percent);
+                        $el.find('.ossuploader-progress-inner').width(file.percent + '%');
                         if(file.percent >= 100){
-                            uploadProgressDesc = '转码中';
+                            uploadProgressDesc = '处理中';
                         }else{
                             uploadProgressDesc = file.percent + '%';
                         }
@@ -430,9 +468,11 @@
                         if (setting.filePerUploaded && typeof setting.filePerUploaded == "function") {
                             setting.filePerUploaded();
                         }
-    
+                        
                         var $el = $('#' + file.id);
-    
+                        var $fileDescDom = $el.find('.ossuploader-progress-desc');
+                        $fileDescDom.text('');
+                        
                         //若上传的过程中 该文件被删除
                         //则不把file_id 添加到隐藏域
                         if (!currentIds[file.id]) {
@@ -441,8 +481,23 @@
                         }
                         
                         
-                        if (info.status == 200) {
-                            var response = JSON.parse(info.response);
+                        if (Number(info.status) === 200) {
+                            var response = {};
+                            var hasErrMsg = false;
+                            try{
+                                response = JSON.parse(info.response);
+                            }catch(e){
+                                hasErrMsg = true;
+                            }
+                            
+                            if(hasErrMsg){
+                                try{
+                                    response.err_msg = $(info.response).find('h1').text();
+                                }catch(e){
+                                    response.err_msg = '网络错误,上传失败';
+                                }
+                            }
+                            
                             if (response.err_msg) {
                                 setting.show_msg(response.err_msg);
                                 $el.remove();
@@ -460,6 +515,7 @@
                                     }
                                 }
                                 $('#' + file.id).attr('data-fileid', response.file_id);
+                                $fileDescDom.text('已上传');
                             }
                         } else {
                             setting.show_msg(info.response);
@@ -467,7 +523,7 @@
                             currentFileLength--;
                             return false;
                         }
-    
+                        
                         $el.addClass('ossuploader-complete');
                         
                         file_count++;
@@ -475,7 +531,7 @@
                             setting.uploadCompleted();
                         }
                     },
-    
+                    
                     FileFiltered: function(up, file) {
                         file.msg && setting.show_msg(file.msg);
                     },
@@ -486,7 +542,7 @@
                         }
                         $('#' + err.file.id).remove();
                         currentFileLength--;
-    
+                        
                         if (err.code == -600) {
                             setting.show_msg("上传的文件太大,请重新上传");
                             // setting.show_msg("选择的文件太大了,可以根据应用情况，在upload.js 设置一下上传的最大大小");
@@ -540,7 +596,7 @@
                 }
             });
         };
-    
+        
         plupload.addFileFilter('check_image', function(filter, file, cb) {
             if(!filter){
                 cb(true);
@@ -555,7 +611,7 @@
             }
             cb(result);
         });
-    
+        
         plupload.addFileFilter('limit_file_size', function(filter, file, cb) {
             if(!filter){
                 cb(true);
