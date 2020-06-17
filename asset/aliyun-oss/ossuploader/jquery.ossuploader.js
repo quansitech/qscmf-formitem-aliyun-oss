@@ -407,8 +407,9 @@
                     
                     FilesAdded: function (up, files) {
                         var limit = setting.limit;
+                        var unixText = setting.type === 'image' ? '张' : '个';
                         if (currentFileLength + files.length > limit) {
-                            setting.show_msg('最多上传' + limit + '张');
+                            setting.show_msg('最多上传' + limit + unixText);
                             return;
                         }
                         
