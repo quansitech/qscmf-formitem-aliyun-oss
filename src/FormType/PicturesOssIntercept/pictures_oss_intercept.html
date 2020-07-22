@@ -34,6 +34,9 @@
                 }
             </php>
             <input type="hidden" name="{$form.name}" value="{$form.value}" data-srcjson="{$pictures_json}">
+            <notempty name="form.tip">
+                <span class="check-tips small">{$form.tip}</span>
+            </notempty>
             <script>
                 $(function () {
                     $('input[name="{$form.name}"]').ossuploader({
