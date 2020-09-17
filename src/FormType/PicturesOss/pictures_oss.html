@@ -112,21 +112,16 @@
                 
                 //删除图片
                 $('#preview_{$gid} ').on('click','.remove-picture', function(){
-                    var id = $(this).siblings('.img').data("id");
-                    removeId(id);
-                    $(this).closest('.img-box').remove(); //删除图片预览图
-                });
-                
-                function removeId(id) {
-                    var fileVal = $('input[name="{$form.name}"]').val().split(',');
-                    for(var i = 0; i < fileVal.length; i++) {
-                        if(parseInt(id) === parseInt(fileVal[i])) {
-                          fileVal.splice(i, 1);
-                          $('input[name="{$form.name}"]').val(fileVal.join(','));
-                          return i;
-                        }
+                    var ready_for_remove_id = $(this).siblings('.img').data("id");
+                    if(!ready_for_remove_id) {
+                        toastr.remove();
+                        $.bs_messagebox('错误', '错误', 'ok');
                     }
-                }
+                    var current_file_ids = $('#preview_{$gid} input').val().split(","); //获取当前文件列表以逗号分隔的ID并转换成数组
+                    current_file_ids.remove(ready_for_remove_id); //从数组中删除待删除的文件ID
+                    $('#preview_{$gid} input').val(current_file_ids.join(',')) //删除后覆盖原input的值
+                    $(this).closest('.img-box').remove(); //删除文件预览
+                });
             </script>
         </div>
     </div>
