@@ -13,10 +13,10 @@
                         <div style="width:50%">
                         <audio src="{$form.value|showFileUrl}" class="audio_oss" controls preload="none"  >
                             您的浏览器不支持 audio 标签。
-                        </audio>      
-                         <i class="fa fa-times-circle remove-picture"></i>    
-                        </div>    
-                       
+                        </audio>
+                         <i class="fa fa-times-circle remove-picture"></i>
+                        </div>
+
                     </span>
                 </notempty>
             </div>
@@ -25,7 +25,7 @@
             </notempty>
             <notdefined name="audio_oss">
                 <link rel="stylesheet" href="{:asset('aliyun-oss/audioplayer/audioplayer.css')}" />
-                
+
                 <script type="text/javascript" src="{:asset('aliyun-oss/plupload-2.1.2/js/plupload.full.min.js')}"></script>
                 <script type="text/javascript" src="{:asset('aliyun-oss/plupload-2.1.2/js/plupload.full.min.js')}"></script>
                 <script type="text/javascript" src="{:asset('aliyun-oss/ossupload/oss_upload.js')}"></script>
@@ -33,98 +33,117 @@
                 <define name="audio_oss" value="1" />
             </notdefined>
             <script type="text/javascript">
-                $('#{$gid}_preview .audio_oss').audioPlayer();
-                new plupload.Uploader({
-                    runtimes : 'html5,flash,silverlight,html4',
-                    browse_button : '{$gid}_selectfiles',
-                    multi_selection: false,
-                    container: document.getElementById('{$gid}'),
-                    flash_swf_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.swf")}',
-                    silverlight_xap_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.xap")}',
-                    url : 'http://oss.aliyuncs.com',
+                (function () {
+                    $('#{$gid}_preview .audio_oss').audioPlayer();
+                    new plupload.Uploader({
+                        runtimes : 'html5,flash,silverlight,html4',
+                        browse_button : '{$gid}_selectfiles',
+                        multi_selection: false,
+                        container: document.getElementById('{$gid}'),
+                        flash_swf_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.swf")}',
+                        silverlight_xap_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.xap")}',
+                        url : 'http://oss.aliyuncs.com',
 
-                    filters: {
-                        mime_types : [ //只允许上传音频
-                        { title : "Image files", extensions : "mp3,wav,cd,ogg,wma,asf,rm,real,ape,midi,m4a" },
-                        ],
-                        prevent_duplicates : true //不允许选取重复文件
-                    },
-
-                    init: {
-                        PostInit: function() {
-                            $('#{$gid}').children('.uploadify-queue').html('');
-                              
+                        filters: {
+                            mime_types : [ //只允许上传音频
+                                { title : "Image files", extensions : "mp3,wav,cd,ogg,wma,asf,rm,real,ape,midi,m4a" },
+                            ],
+                            prevent_duplicates : true //不允许选取重复文件
                         },
 
-                        FilesAdded: function(up, files) {
-                            $('#{$gid}_preview .audio-box').remove();
-                            plupload.each(files, function(file) {
-                                var html = '<div id="' + file.id + '" class="uploadify-queue-item">' +
-                                        '<div class="uploadify-progress" lastloaded="0">' +
-                                        '<div class="uploadify-progress-bar" style="width: 0%;">' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '<span class="up_percent">0%</span>' +
-                                        '<span class="up_filename">' + file.name + '</span>' +
-                                        // '<i class="fa fa-times-circle remove-picture"></i>'+
-                                        '</div>';
-                                $('#{$gid}').children('.uploadify-queue').html(html);
-                                set_upload_param(up, file.name, false, $('#{$gid}').data('url'));
-                            });
+                        init: {
+                            PostInit: function() {
+                                $('#{$gid}').children('.uploadify-queue').html('');
 
-                        },
+                            },
 
-                        UploadProgress: function(up, file) {
-                            $('#' + file.id).children('.uploadify-progress').attr('lastloaded', file.loaded);
-                            $('#' + file.id).find('.uploadify-progress-bar').css('width', file.percent + "%");
-                            $('#' + file.id).children('.up_percent').html(file.percent + "%");
-                        },
+                            FilesAdded: function(up, files) {
+                                $('#{$gid}_preview .audio-box').remove();
+                                plupload.each(files, function(file) {
+                                    var html = '<div id="' + file.id + '" class="uploadify-queue-item">' +
+                                            '<div class="uploadify-progress" lastloaded="0">' +
+                                            '<div class="uploadify-progress-bar" style="width: 0%;">' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '<span class="up_percent">0%</span>' +
+                                            '<span class="up_filename">' + file.name + '</span>' +
+                                            // '<i class="fa fa-times-circle remove-picture"></i>'+
+                                            '</div>';
+                                    $('#{$gid}').children('.uploadify-queue').html(html);
+                                    set_upload_param(up, file.name, false, $('#{$gid}').data('url'));
+                                });
 
-                        FileUploaded: function(up, file, info) {
-                            if (info.status == 200)
-                            {
-                                var response = JSON.parse(info.response);
-                                $('#{$gid}_preview').html('');
-                                $('#{$gid}_preview').append('<input type="hidden" name="{$form.name}" value="' + response.file_id + '">');
+                            },
 
-                                $('#{$gid}_preview').append('<span class="audio-box"><div style = "width:50%;" ><audio  controls preload="none" class = "audio_oss"  src="' + response.file_url + '"   >您的浏览器不支持 audio 标签。</audio><i class="fa fa-times-circle remove-picture"></i></div></span>');
-                                $('#{$gid}_preview .audio_oss').audioPlayer();
-                            }
-                            else
-                            {
-                                alert(info.response);
-                            }
-                            $('#{$gid}').children('.uploadify-queue').empty();
-                        },
+                            UploadProgress: function(up, file) {
+                                $('#' + file.id).children('.uploadify-progress').attr('lastloaded', file.loaded);
+                                $('#' + file.id).find('.uploadify-progress-bar').css('width', file.percent + "%");
+                                $('#' + file.id).children('.up_percent').html(file.percent + "%");
+                            },
 
-                        Error: function(up, err) {
-                            if (err.code == -600) {
-                                alert("选择的文件太大了,可以根据应用情况，在upload.js 设置一下上传的最大大小");
-                            }
-                            else if (err.code == -601) {
-                                alert("选择的文件后缀不对,可以根据应用情况，在upload.js进行设置可允许的上传文件类型");
-                            }
-                            else if (err.code == -602) {
-                                alert("这个文件已经上传过一遍了");
-                            }
-                            else
-                            {
-                                alert(err.response);
+                            FileUploaded: function(up, file, info) {
+                                if (info.status == 200)
+                                {
+                                    var response = JSON.parse(info.response);
+                                    $('#{$gid}_preview').html('');
+                                    $('#{$gid}_preview').append('<input type="hidden" name="{$form.name}" value="' + response.file_id + '">');
+
+                                    $('#{$gid}_preview').append('<span class="audio-box"><div style = "width:50%;" ><audio  controls preload="none" class = "audio_oss"  src="' + response.file_url + '"   >您的浏览器不支持 audio 标签。</audio><i class="fa fa-times-circle remove-picture"></i></div></span>');
+                                    $('#{$gid}_preview .audio_oss').audioPlayer();
+                                }
+                                else
+                                {
+                                    alert(info.response);
+                                }
+                                $('#{$gid}').children('.uploadify-queue').empty();
+                            },
+
+                            Error: function(up, err) {
+                                var MAX_SIZE_ALLOWED = '';
+                                var errText = '';
+                                var codeMap = {
+                                    EntityTooLarge: -600,
+                                }
+                                try{
+                                    var parser = new DOMParser();
+                                    xmlDoc = parser.parseFromString(err.response, "text/xml");
+                                    errText = $(xmlDoc).find('Code').text();
+                                    MAX_SIZE_ALLOWED = ($(xmlDoc).find('MaxSizeAllowed').text() / 1024 / 1024) + 'Mb';
+                                }catch(e){
+                                }
+
+                                err.code = errText ? codeMap[errText] : err.code;
+
+                                $('#' + err.file.id).remove();
+
+                                if (err.code == codeMap.EntityTooLarge) {
+                                    alert("选择的文件太大了,建议不超过"+ MAX_SIZE_ALLOWED +",请重新上传");
+                                }
+                                else if (err.code == -601) {
+                                    alert("选择的文件后缀不对,请重新上传");
+                                }
+                                else if (err.code == -602) {
+                                    alert("这个文件已经上传过一遍了");
+                                }
+                                else
+                                {
+                                    alert(err.response);
+                                }
                             }
                         }
-                    }
-                }).init();
-                
-                //删除
-                $('#{$gid}_preview').on('click','.remove-picture', function(){
-                    $('#{$gid}_preview input').val('') //删除后覆盖原input的值为空
-                    $(this).closest('.audio-box').remove(); //删除                
-                });
-                //上传中删除
-                $('#{$gid}').on('click','.remove-picture', function(){
-                    $('#{$gid}_preview input').val(''); //删除后覆盖原input的值为空
-                    $(this).parent().parent().remove();
-                });                
+                    }).init();
+
+                    //删除
+                    $('#{$gid}_preview').on('click','.remove-picture', function(){
+                        $('#{$gid}_preview input').val('') //删除后覆盖原input的值为空
+                        $(this).closest('.audio-box').remove(); //删除
+                    });
+                    //上传中删除
+                    $('#{$gid}').on('click','.remove-picture', function(){
+                        $('#{$gid}_preview input').val(''); //删除后覆盖原input的值为空
+                        $(this).parent().parent().remove();
+                    });
+                })();
             </script>
         </div>
     </div>
