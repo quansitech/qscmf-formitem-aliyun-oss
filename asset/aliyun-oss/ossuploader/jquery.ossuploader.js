@@ -148,7 +148,7 @@
             filters: {
                 prevent_duplicates: false, //允许选取重复文件
                 check_image: false, //是否检查文件后缀
-                limit_file_size: 5 * 1024 * 1024, //是否检查文件大小
+                limit_file_size: 10 * 1024 * 1024, //是否检查文件大小
             },
         };
         
