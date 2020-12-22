@@ -32,10 +32,15 @@
         return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
     }
     
-    function Crop(opt, browse_button, plupload) {
+    function Crop(opt, browse_button, plupload, canvasOption) {
+        var defaultCanvasOption = {
+            fillColor: '#fff',
+        };
+        
         this.options = opt;
         this.browse_button = browse_button;
         this.plupload = plupload;
+        this.canvasOption = $.extend({}, defaultCanvasOption, canvasOption);
         
         this.createDom();
         this.bindEvent();
@@ -58,7 +63,7 @@
             crop.showModal();
         });
         this.cropButton.on('click', function () {
-            var canvas = crop.cropper.getCroppedCanvas();
+            var canvas = crop.cropper.getCroppedCanvas(crop.canvasOption);
             canvas.toBlob(function (blob) {
                 crop.plupload.addFile(blob);
                 crop.hideModal();
@@ -566,7 +571,7 @@
             pluploaduploader.init();
             
             if (setting.crop) {
-                var crop = new Crop(setting.crop, div_add.id, pluploaduploader);
+                var crop = new Crop(setting.crop, div_add.id, pluploaduploader, setting.canvasOption);
             }
             
             $(div).on('click', '.ossuploader-filedelete', function () {

@@ -102,6 +102,7 @@ ALIOSS_HOST=**********
   * 可以定义限制文件后缀、大小以及是否允许选取重复文件
   * 限制上传张数
   * 可自定义提示函数
+  * 裁剪上传图会默认转成jpg;png透明背景默认转成白色
   
   ### 初始化调用
   
@@ -112,6 +113,12 @@ ALIOSS_HOST=**********
       url:                //string require  上传图片的地址
       multi_selection:    //boolean optional 是否多选
       oss:                //boolean optional 是否启用oss
+      canvasOption:{       //object optional 配置getCroppedCanvas
+          //修改裁剪后图片的背景色 为黑色
+          fillColor: '#333',
+      } 
+      //get more information: https://github.com/fengyuanchen/cropperjs
+
       crop:{              //object optional cropper配置,若存在此项，则裁剪图片,更多配置请参考cropper.js官网
           aspectRatio: 120/120,
           viewMode: 1,
