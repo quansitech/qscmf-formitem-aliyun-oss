@@ -34,7 +34,6 @@
     
     function Crop(opt, browse_button, plupload, canvasOption) {
         var defaultCanvasOption = {
-            fillColor: '#fff',
         };
         
         this.options = opt;
