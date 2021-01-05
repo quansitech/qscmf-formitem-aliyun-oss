@@ -12,7 +12,7 @@
                 <notempty name="form.value">
                     <?php $images = explode(',',$form['value']); ?>
                     <foreach name="images" item="img">
-                        <span class="img-box"><img class="img" src="{$img|showFileUrl}" data-id="{$img}"><i class="fa fa-times-circle remove-picture"></i></span>
+                        <span class="img-box"><img class="img" src="{$img|showFileUrl}{$form.options.process}" data-id="{$img}"><i class="fa fa-times-circle remove-picture"></i></span>
                     </foreach>
                 </notempty>
             </div>

@@ -11,7 +11,7 @@
                 <input type="hidden" name="{$form.name}" value="{$form.value}">
                 <notempty name="form.value">
                     <span class="img-box">
-                        <img class="img" src="{$form.value|showFileUrl}">
+                        <img class="img" src="{$form.value|showFileUrl}{$form.options.process}">
                         <i class="fa fa-times-circle remove-picture"></i>
                     </span>
                 </notempty>
