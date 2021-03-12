@@ -69,6 +69,10 @@ ALIOSS_HOST=**********
   // 如没有特别需求，$extra_attr可不传
   addFormItem('picture_id', 'picture_oss', '单张图片', '', '', '', $extra_attr)
   addFormItem('pictures_id', 'pictures_oss', '多张图片')
+  
+  $options = ['process'=>'?x-oss-process=image/resize,m_fill,w_300,h_200'] //其中w_300,h_200为参数宽300高200，请根据实际需求填写
+  // 如表单没有显示缩略图需求，$options可以不传，$options为空时显示原图
+   addFormItem('picture_id', 'picture_oss', '单张图片', '',$options , '', '')
   ```
   
   + 上传裁剪后的图片：picture_oss_intercept/pictures_oss_intercept
