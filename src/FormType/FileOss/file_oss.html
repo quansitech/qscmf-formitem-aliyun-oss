@@ -79,6 +79,11 @@
                             if (info.status == 200)
                             {
                                 var response = JSON.parse(info.response);
+                                if (response.err_msg) {
+                                    $('#upload_{$gid}').children('.uploadify-queue').empty();
+                                    alert(response.err_msg);
+                                    return;
+                                }
                                 var new_file = '<li class="list-group-item file-item" data-id="'+response.file_id+'"><i class="fa fa-file"></i> '
                                         +file.name+' <i class="fa fa-times-circle remove-file"></i></li>';
                                 $('#preview_{$gid} .list-group').html(new_file);

@@ -79,6 +79,11 @@
                                 if (info.status == 200)
                                 {
                                     var response = JSON.parse(info.response);
+                                    if (response.err_msg) {
+                                        $('#upload_{$gid}').children('.uploadify-queue').empty();
+                                        alert(response.err_msg);
+                                        return;
+                                    }
                                     $('#preview_{$gid}').html('');
                                     $('#preview_{$gid}').append('<input type="hidden" name="{$form.name}" value="' + response.file_id + '">');
                                     $('#preview_{$gid}').append('<span class="img-box"><img class="img" src="' + response.file_url + '"><i class="fa fa-times-circle remove-picture"></i></span>');
