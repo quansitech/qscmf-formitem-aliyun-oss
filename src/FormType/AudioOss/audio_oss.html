@@ -85,6 +85,11 @@
                                 if (info.status == 200)
                                 {
                                     var response = JSON.parse(info.response);
+                                    if (response.err_msg) {
+                                        $('#{$gid}').children('.uploadify-queue').empty();
+                                        alert(response.err_msg);
+                                        return;
+                                    }
                                     $('#{$gid}_preview').html('');
                                     $('#{$gid}_preview').append('<input type="hidden" name="{$form.name}" value="' + response.file_id + '">');
 
