@@ -140,10 +140,6 @@ ALIOSS_HOST=**********
       show_msg:           //function optional 展示提示消息的函数,默认为window.alert
       limit:              //number   optional 上传图片张数的限制,默认值32
       tpye:               //string   optional 上传类型 file | image 默认值 image
-      readonly:           //boolean  optional 是否只读。只读的情况下,不展示上传按钮。
-                                //可在隐藏域中属性设置readonly
-                                //若type为image, 引入viewer.js,点击可看大图
-                                //若type为file, 点击可下载文件
       beforeUpload:       //function optional 回调 参考回调说明
       filePerUploaded:    //function optional 回调 参考回调说明
       uploadCompleted:    //function optional 回调 参考回调说明
