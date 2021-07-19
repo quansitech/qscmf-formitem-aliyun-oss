@@ -6,10 +6,11 @@
     var get_suffix = function (filename) {
         filename = String(filename);
         pos = filename.lastIndexOf('.');
-        suffix = '';
+        var suffix = '';
         if (pos !== -1) {
             suffix = filename.substring(pos);
         }
+        suffix = suffix.toLowerCase();
         return suffix;
     }
     
@@ -273,6 +274,7 @@
             if (upload_flag == false && file_id) {
                 htmlEL.attr('data-fileid', file_id);
                 htmlEL.addClass('ossuploader-complete');
+                htmlEL.find('.ossuploader-progress-desc').text('已上传');
             }
             $(parent_div).find('.ossuploader-file-group').append(htmlEL);
         };
