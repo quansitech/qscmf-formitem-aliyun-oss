@@ -6,10 +6,11 @@
     var get_suffix = function (filename) {
         filename = String(filename);
         pos = filename.lastIndexOf('.');
-        suffix = '';
+        var suffix = '';
         if (pos !== -1) {
             suffix = filename.substring(pos);
         }
+        suffix = suffix.toLowerCase();
         return suffix;
     }
     
@@ -632,79 +633,10 @@
             }
             cb(result);
         });
-
-        function initPicViewer(el) {
-            if(window.Viewer){
-                new Viewer(el);
-            }
-        }
-
-        function initReadonly(el) {
-            var src = $(el).data('srcjson') || [];
-
-            var html = getReadonlyHtml(src);
-
-            $(el).parent().append(html);
-
-            setTimeout(function () {
-                if(setting.type === 'image'){
-                    initPicViewer($(el).parent().find('.oss-uploaded-pic-list').get(0));
-                }
-            });
-
-        }
-
-        function getReadonlyHtml(data) {
-            var  type = setting.type;
-            var html = '';
-            if(type === 'file'){
-                html = getReadonlyFileHtml(data);
-            }else{
-                html = getReadonlyPicHtml(data);
-            }
-            return html;
-        }
-
-        function getReadonlyPicHtml(data) {
-            if(!data){
-                return '';
-            }
-            var html = '<ul class="oss-uploaded-pic-list">';
-            data.forEach(function (item) {
-                html += '<li>' +
-                    '<img src="' + item + '" />' +
-                    '</li>';
-            });
-            html += '</ul>';
-            return html;
-        }
-
-        function getReadonlyFileHtml(data) {
-            if(!data){
-                return '';
-            }
-            var html = '<ul class="oss-uploaded-file-list">';
-            data.forEach(function (item) {
-                html += '<li>' +
-                    '<a target="_blank" href="'+ item +'" download="' + item +'">' +
-                    '<span class="ossuploader-file-suffix">'+ get_suffix(item) +'</span>' +
-                    '<span class="file-name">'+ item +'</span>' +
-                    '</a>' +
-                    '</li>';
-            });
-            html += '</ul>';
-            return html;
-        }
         
         (function (o) {
             $(o).each(function () {
-                var isReadonly = $(o).attr('readonly') || option.readonly || false;
-
-                if(isReadonly){
-                    initReadonly(this);
-                }else{
-                    init(this);
-                }
+                init(this);
             });
             
             
