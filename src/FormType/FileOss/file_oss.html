@@ -13,7 +13,7 @@
                 <notempty name="form.value">
                     <li class="list-group-item file-item" data-id="{$form.value}">
                         <i class="fa fa-file"></i>
-                        <span>{:showFileTitle($form['value'])}</span>
+                        <span>{:showFileTitle($form['value'])} <a href="{$form.value|showFileUrl}" target="_blank">下载</a></span>
                         <i class="fa fa-times-circle remove-file"></i>
                     </li>
                 </notempty>
@@ -85,7 +85,7 @@
                                     return;
                                 }
                                 var new_file = '<li class="list-group-item file-item" data-id="'+response.file_id+'"><i class="fa fa-file"></i> '
-                                        +file.name+' <i class="fa fa-times-circle remove-file"></i></li>';
+                                        +file.name+' <a href="'+response.file_url+'" target="_blank">下载</a> <i class="fa fa-times-circle remove-file"></i></li>';
                                 $('#preview_{$gid} .list-group').html(new_file);
                                 $('#preview_{$gid} input').attr('value', response.file_id);
                             }
