@@ -60,7 +60,7 @@
                                         '<span class="up_filename">' + file.name + '</span>' +
                                         '</div>';
                                 $('#upload_{$gid}').children('.uploadify-queue').html(html);
-                                set_upload_param(up, file.name, false, $('#upload_{$gid}').data('url'));
+                                set_upload_param(up, file.name, false, $('#upload_{$gid}').data('url'),'title='+encodeURIComponent(file.name));
                             });
 
                         },
