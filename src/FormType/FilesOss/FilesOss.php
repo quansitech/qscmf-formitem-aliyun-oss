@@ -8,6 +8,8 @@ use Think\View;
 class FilesOss implements FormType{
 
     public function build(array $form_type){
+        $form_type['options'] = (array)$form_type['options'];
+
         $view = new View();
         $view->assign('form', $form_type);
         $view->assign('gid', Str::uuid());

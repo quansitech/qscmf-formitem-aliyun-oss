@@ -34,7 +34,7 @@ class AliyunOss{
             E($type . '这不是oss上传配置类型!');
         }
         
-        if(!preg_match('/https*:\/\/([\w-_]+?)\.[\w-_\.]+/', $config['oss_host'], $match)){
+        if(!preg_match('/https*:\/\/([\w\-_]+?)\.[\w\-_.]+/', $config['oss_host'], $match)){
             E($type . '类型上传配置项中匹配不到bucket项');
         }
         
