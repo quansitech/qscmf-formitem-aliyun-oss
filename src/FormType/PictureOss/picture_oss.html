@@ -26,7 +26,7 @@
             </notdefined>
             <script type="text/javascript">
                 (function () {
-                    var FILE_EXT = 'jpg,gif,png,bmp,jpeg';
+                    var FILE_EXT = "{$file_ext}";
 
                     new plupload.Uploader({
                         runtimes : 'html5,flash,silverlight,html4',
@@ -39,7 +39,7 @@
 
                         filters: {
                             mime_types : [ //只允许上传图片
-                                { title : "Image files", extensions : "jpg,gif,png,bmp,jpeg" },
+                                { title : "Image files", extensions : FILE_EXT || "jpg,gif,png,bmp,jpeg" },
                             ],
                             prevent_duplicates : false //不允许选取重复文件
                         },

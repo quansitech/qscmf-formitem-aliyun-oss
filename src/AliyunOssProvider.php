@@ -16,6 +16,8 @@ use FormItem\AliyunOss\FormType\PicturesOssIntercept\PicturesOssIntercept;
 class AliyunOssProvider implements Provider {
 
     public function register(){
+        $this->addHook();
+
         RegisterContainer::registerFormItem('audio_oss', AudioOss::class);
         RegisterContainer::registerFormItem('audios_oss', AudiosOss::class);
         RegisterContainer::registerFormItem('file_oss', FileOss::class);
@@ -28,5 +30,9 @@ class AliyunOssProvider implements Provider {
         RegisterContainer::registerController('extends', 'AliyunOss', AliyunOssController::class);
 
         RegisterContainer::registerSymLink(WWW_DIR . '/Public/aliyun-oss', __DIR__ . '/../asset/aliyun-oss');
+    }
+
+    protected function addHook(){
+        \Think\Hook::add('heic_to_jpg', 'FormItem\\AliyunOss\\Behaviors\\HeicToJpgBehavior');
     }
 }

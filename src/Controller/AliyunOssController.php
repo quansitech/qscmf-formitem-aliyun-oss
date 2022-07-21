@@ -27,12 +27,16 @@ class AliyunOssController extends \Think\Controller{
         if ($body_arr['title']){
             $file_data['title'] = $body_arr['title'];
         }else {
-            $file_data['title'] = end(explode('/', $body_arr['filename']));
+            $name_arr = explode('/', $body_arr['filename']);
+            $file_data['title'] = end($name_arr);
         }
 
         $file_data['url'] = $config['oss_host'] . '/' . $body_arr['filename'] . ($config['oss_style'] ? $config['oss_style'] : '');
         $file_data['size'] = $body_arr['size'];
         $file_data['cate'] = $body_arr['upload_type'];
+        $file_data['mime_type'] = $body_arr['image_format'] ?
+            $this->intersectMimeType($body_arr['image_format'],$body_arr['mimeType']) :
+            $body_arr['mimeType'];
         $file_data['security'] = $config['security'] ? 1 : 0;
         $file_data['file'] = '';
 
@@ -46,6 +50,7 @@ class AliyunOssController extends \Think\Controller{
                 $ali_oss = new AliyunOss();
                 $file_data['url'] = $ali_oss->getOssClient($body_arr['upload_type'])->signUrl($body_arr['filename'], 60);
             }
+            \Think\Hook::listen('heic_to_jpg', $file_data);
             $this->ajaxReturn(array('file_id' => $r, 'file_url' => $file_data['url']));
         }
     }
@@ -54,7 +59,7 @@ class AliyunOssController extends \Think\Controller{
         $callbackUrl = HTTP_PROTOCOL . '://' . SITE_URL . '/extends/AliyunOss/callBack';
 
         $callback_param = array('callbackUrl'=>$callbackUrl,
-                 'callbackBody'=>'filename=${object}&size=${size}&mimeType=${mimeType}&upload_type=${x:upload_type}',
+                 'callbackBody'=>'filename=${object}&size=${size}&mimeType=${mimeType}&upload_type=${x:upload_type}&image_format=${imageInfo.format}',
                  'callbackBodyType'=>"application/x-www-form-urlencoded");
         if (I('get.title')){
             $callback_param['callbackBody'].='&title=${x:title}';
@@ -164,5 +169,20 @@ class AliyunOssController extends \Think\Controller{
         {
             return false;
         }
+    }
+
+    protected function intersectMimeType(string $format, string $mime_type):string{
+        if (empty($format)){
+            return $mime_type;
+        }
+        $guess_mime_type = (new \Symfony\Component\Mime\MimeTypes())->getMimeTypes($format);
+        if ($guess_mime_type){
+            $same_mime_type = array_intersect([$mime_type], $guess_mime_type);
+            if ($mime_type === 'application/octet-stream' && !$same_mime_type){
+                return $guess_mime_type[0];
+            }
+        }
+
+        return $mime_type;
     }
 }
