@@ -20,12 +20,7 @@ class HeicToJpgBehavior{
     protected function formatHeicToJpg(){
         if ($this->isOssUrl() && $this->isHeic()) {
             $url = $this->file->getUrl();
-            if (strpos($url, '?') !== false){
-                $url .= '&x-oss-process=image/format,jpg';
-            }else{
-                $url .= '?x-oss-process=image/format,jpg';
-            }
-            $this->file->setUrl($url);
+            $this->file->setUrl(combineOssUrlImgOpt($url, 'format,jpg'));
         }
     }
 
