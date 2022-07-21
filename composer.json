@@ -13,7 +13,7 @@
 
   "require": {
   "php": ">=7.2.0",
-  "tiderjian/think-core": ">=11.42.0||>=12.8.0",
+  "tiderjian/think-core": ">=11.43.0||>=12.9.0",
   "aliyuncs/oss-sdk-php": "^2.0"
   },
   "autoload": {
