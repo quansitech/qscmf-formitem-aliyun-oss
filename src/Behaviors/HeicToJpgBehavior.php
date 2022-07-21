@@ -10,9 +10,11 @@ class HeicToJpgBehavior{
 
     public function run(&$params)
     {
-        $this->file = new File($params['url'], $params['mime_type']);
-        $this->formatHeicToJpg();
-        $params['url'] = $this->file->getUrl();
+        if($params['url'] && $params['mime_type']){
+            $this->file = new File($params['url'], $params['mime_type']);
+            $this->formatHeicToJpg();
+            $params['url'] = $this->file->getUrl();
+        }
     }
 
     protected function formatHeicToJpg(){
