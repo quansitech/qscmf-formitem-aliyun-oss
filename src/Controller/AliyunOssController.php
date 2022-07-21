@@ -3,6 +3,7 @@
 namespace FormItem\AliyunOss\Controller;
 
 use FormItem\AliyunOss\Lib\AliyunOss;
+use FormItem\AliyunOss\Lib\UploadConfig;
 
 class AliyunOssController extends \Think\Controller{
 
@@ -79,7 +80,7 @@ class AliyunOssController extends \Think\Controller{
 //        $dir = trim(trim($pre_path . $save_name, '.'), '/');
 
         $dir = AliyunOss::genOssObjectName($config);
-        $condition = array(0=>'content-length-range', 1=>0, 2=> $config['maxSize']);
+        $condition = array(0=>'content-length-range', 1=>0, 2=> $this->getMaxSize($type));
 
         $conditions[] = $condition;
 
@@ -184,5 +185,9 @@ class AliyunOssController extends \Think\Controller{
         }
 
         return $mime_type;
+    }
+
+    protected function getMaxSize($type){
+        return (new UploadConfig($type))->getMaxSize();
     }
 }

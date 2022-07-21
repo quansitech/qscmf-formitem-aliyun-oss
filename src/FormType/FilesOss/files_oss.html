@@ -34,6 +34,8 @@
         </notdefined>
         <script type="text/javascript">
             (function () {
+                var fileExts = "{$file_ext}";
+
                 new plupload.Uploader({
                     runtimes : 'html5,flash,silverlight,html4',
                     browse_button : 'selectfiles_{$gid}',
@@ -45,9 +47,9 @@
                     url : 'http://oss.aliyuncs.com',
 
                     filters: {
-                        // mime_types : [
-                        //     { title : "files", extensions : "mp4,avi,rmvb,rm,mpg,mpeg,wmv,mkv,flv,mp3,doc,docx,xls,xlsx,pdf,ppt,txt,rar,ppt,pptx,doc,rtf,zip,7z,jpg,png" },
-                        // ],
+                        mime_types : [
+                            { title : "files", extensions : fileExts },
+                        ],
                         prevent_duplicates : false //不允许选取重复文件
                     },
 
@@ -132,7 +134,7 @@
                                 alert("选择的文件太大了,建议不超过"+ MAX_SIZE_ALLOWED +",请重新上传");
                             }
                             else if (err.code == -601) {
-                                alert("选择的文件后缀不对,请重新上传");
+                                alert("选择的文件后缀不对,建议上传"+ fileExts +",请重新上传");
                             }
                             else if (err.code == -602) {
                                 alert("这个文件已经上传过一遍了");
