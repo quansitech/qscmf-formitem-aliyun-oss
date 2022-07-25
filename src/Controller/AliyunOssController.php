@@ -19,9 +19,12 @@ class AliyunOssController extends \Think\Controller{
             E('获取不到文件规则config设置');
         }
 
+        $mime_type = $body_arr['image_format'] ?
+            $this->intersectMimeType($body_arr['image_format'],$body_arr['mimeType']) :
+            $body_arr['mimeType'];
         if(!empty($config['mimes'])){
             $mimes = explode(',', $config['mimes']);
-            if(!in_array(strtolower($body_arr['mimeType']), $mimes)){
+            if(!in_array(strtolower($mime_type), $mimes)){
                 $this->ajaxReturn(array('err_msg' => '上传的文件类型不符合要求'));
             }
         }
@@ -35,9 +38,7 @@ class AliyunOssController extends \Think\Controller{
         $file_data['url'] = $config['oss_host'] . '/' . $body_arr['filename'] . ($config['oss_style'] ? $config['oss_style'] : '');
         $file_data['size'] = $body_arr['size'];
         $file_data['cate'] = $body_arr['upload_type'];
-        $file_data['mime_type'] = $body_arr['image_format'] ?
-            $this->intersectMimeType($body_arr['image_format'],$body_arr['mimeType']) :
-            $body_arr['mimeType'];
+        $file_data['mime_type'] = $mime_type;
         $file_data['security'] = $config['security'] ? 1 : 0;
         $file_data['file'] = '';
 
@@ -178,10 +179,7 @@ class AliyunOssController extends \Think\Controller{
         }
         $guess_mime_type = (new \Symfony\Component\Mime\MimeTypes())->getMimeTypes($format);
         if ($guess_mime_type){
-            $same_mime_type = array_intersect([$mime_type], $guess_mime_type);
-            if ($mime_type === 'application/octet-stream' && !$same_mime_type){
-                return $guess_mime_type[0];
-            }
+            return $guess_mime_type[0];
         }
 
         return $mime_type;
