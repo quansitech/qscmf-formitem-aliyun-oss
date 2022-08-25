@@ -24,24 +24,24 @@ composer require quansitech/qscmf-formitem-aliyun-oss
   //UPLOAD_TYPE_*** 其中***为对应的type
   ```
 
+```php
 'UPLOAD_TYPE_FILE' => array(
-    'mimes'    => '', //允许上传的文件MiMe类型
-    'maxSize'  => 500*1024*1024, //上传的文件大小限制 (0-不做限制)
-    'exts'     => 'doc,docx,xls,xlsx,pdf,ppt,txt,rar,pptx,rtf,zip,7z,jpg,png', //允许上传的文件后缀
-    'autoSub'  => true, //自动子目录保存文件
-    'subName'  => array('date','Ymd'), //子目录创建方式，[0]-函数名，[1]-参数，多个参数使用数组
-    'rootPath' => './Uploads/', //保存根路径
-    'savePath' => 'file/', //保存路径
-    'saveName' => array('uniqid', ''), //上传文件命名规则，[0]-函数名，[1]-参数，多个参数使用数组
-    'saveExt'  => '', //文件保存后缀，空则使用原后缀
-    'replace'  => false, //存在同名是否覆盖
-    'hash'     => true, //是否生成hash编码
-    'callback' => false, //检测文件是否存在回调函数，如果存在返回文件信息数组
-    'oss_host' => env('ALIOSS_HOST'),
-    'oss_meta' => array('Cache-Control' => 'max-age=2592000', 'Content-Disposition' => 'attachment'),
+ 'mimes' => '', //允许上传的文件MiMe类型
+ 'maxSize' => 500*1024*1024, //上传的文件大小限制 (0-不做限制)
+ 'exts' => 'doc,docx,xls,xlsx,pdf,ppt,txt,rar,pptx,rtf,zip,7z,jpg,png', //允许上传的文件后缀
+ 'autoSub' => true, //自动子目录保存文件
+ 'subName' => array('date','Ymd'), //子目录创建方式，[0]-函数名，[1]-参数，多个参数使用数组
+ 'rootPath' => './Uploads/', //保存根路径
+ 'savePath' => 'file/', //保存路径
+ 'saveName' => array('uniqid', ''), //上传文件命名规则，[0]-函数名，[1]-参数，多个参数使用数组
+ 'saveExt' => '', //文件保存后缀，空则使用原后缀
+ 'replace' => false, //存在同名是否覆盖
+ 'hash' => true, //是否生成hash编码
+ 'callback' => false, //检测文件是否存在回调函数，如果存在返回文件信息数组
+ 'oss_host' => env('ALIOSS_HOST'),
+ 'oss_meta' => array('Cache-Control' => 'max-age=2592000', 'Content-Disposition' => 'attachment'),
 ),
-
-
+```
 
 Ps. 其中oss_meta支持设置变量替换，如：希望下载oss文件时，可以使用原来的文件名称进行下载（上传到oss后真实文件名会变成随机码）, 在filename=后面加上"\_\_title__"，程序会自动替换成真实的文件名, 代码如下
 
@@ -108,11 +108,7 @@ Ps. 其中oss_meta支持设置变量替换，如：希望下载oss文件时，�
   addFormItem('covers', 'pictures_oss_intercept', '多张裁剪后的图片')
   ```
 
-## 
-
-## 使用技巧
-
-1. 文件上传到
+# 
 
 
 
