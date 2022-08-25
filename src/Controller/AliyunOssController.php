@@ -110,6 +110,12 @@ class AliyunOssController extends \Think\Controller{
         $response['callback'] = $base64_callback_body;
         $response['callback_var'] = $callback_var;
         if($config['oss_meta']){
+            $get_data = I('get.');
+            foreach($config['oss_meta'] as &$vo){
+                $vo = preg_replace_callback('/__(\w+?)__/', function($matches) use($get_data){
+                    return $get_data[$matches[1]];
+                }, $vo);
+            }
             $response['oss_meta'] = json_encode($config['oss_meta']);
         }
         //这个参数是设置用户上传指定的前缀
