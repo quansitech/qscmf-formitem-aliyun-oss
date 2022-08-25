@@ -34,5 +34,6 @@ class AliyunOssProvider implements Provider {
 
     protected function addHook(){
         \Think\Hook::add('heic_to_jpg', 'FormItem\\AliyunOss\\Behaviors\\HeicToJpgBehavior');
+        \Think\Hook::add('get_auth_url', 'FormItem\\AliyunOss\\Behaviors\\SecurityUrlBehavior');
     }
 }
