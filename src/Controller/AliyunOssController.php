@@ -111,10 +111,17 @@ class AliyunOssController extends \Think\Controller{
         $response['callback_var'] = $callback_var;
         if($config['oss_meta']){
             $get_data = I('get.');
-            foreach($config['oss_meta'] as &$vo){
+            foreach($config['oss_meta'] as $k => &$vo){
                 $vo = preg_replace_callback('/__(\w+?)__/', function($matches) use($get_data){
                     return $get_data[$matches[1]];
                 }, $vo);
+
+
+                if(strtolower($k) == 'content-disposition' && preg_match("/attachment;\s*?filename=(.+)/", $vo, $matches)){
+                    $vo = preg_replace_callback("/attachment;\s*?filename=(.+)/", function($matches){
+                        return 'attachment;filename=' . urlencode($matches[1]) . ";filename*=utf-8''" . urlencode($matches[1]);
+                    }, $vo);
+                }
             }
             $response['oss_meta'] = json_encode($config['oss_meta']);
         }
