@@ -103,7 +103,7 @@ class AliyunOssController extends \Think\Controller{
 
         $response = array();
         $response['accessid'] = C('ALIOSS_ACCESS_KEY_ID');
-        $response['host'] = $config['oss_host'];
+        $response['host'] = $config['upload_oss_host'] ?? $config['oss_host'];
         $response['policy'] = $base64_policy;
         $response['signature'] = $signature;
         $response['expire'] = $end;

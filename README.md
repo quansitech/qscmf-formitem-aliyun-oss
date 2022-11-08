@@ -38,7 +38,8 @@ composer require quansitech/qscmf-formitem-aliyun-oss
  'replace' => false, //存在同名是否覆盖
  'hash' => true, //是否生成hash编码
  'callback' => false, //检测文件是否存在回调函数，如果存在返回文件信息数组
- 'oss_host' => env('ALIOSS_HOST'),
+ 'oss_host' => env('ALIOSS_HOST'), // oss地址，如果不指定upload_oss_host，该地址会作为上传地址和资源访问地址
+ 'upload_oss_host' => env("UPLOAD_ALIOSS_HOST"), // 指定上传的oss地址,不指定的话会使用oss_host作为上传地址
  'oss_meta' => array('Cache-Control' => 'max-age=2592000', 'Content-Disposition' => 'attachment'),
 ),
 ```
