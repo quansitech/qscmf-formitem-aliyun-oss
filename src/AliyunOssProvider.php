@@ -12,6 +12,7 @@ use FormItem\AliyunOss\FormType\PictureOss\PictureOss;
 use FormItem\AliyunOss\FormType\PictureOssIntercept\PictureOssIntercept;
 use FormItem\AliyunOss\FormType\PicturesOss\PicturesOss;
 use FormItem\AliyunOss\FormType\PicturesOssIntercept\PicturesOssIntercept;
+use FormItem\AliyunOss\ColumnType\PictureOss\PictureOss as ColumnPictureOss;
 
 class AliyunOssProvider implements Provider {
 
@@ -26,6 +27,7 @@ class AliyunOssProvider implements Provider {
         RegisterContainer::registerFormItem('pictures_oss', PicturesOss::class);
         RegisterContainer::registerFormItem('picture_oss_intercept', PictureOssIntercept::class);
         RegisterContainer::registerFormItem('pictures_oss_intercept', PicturesOssIntercept::class);
+        RegisterContainer::registerListColumnType("picture_oss",ColumnPictureOss::class);
 
         RegisterContainer::registerController('extends', 'AliyunOss', AliyunOssController::class);
 

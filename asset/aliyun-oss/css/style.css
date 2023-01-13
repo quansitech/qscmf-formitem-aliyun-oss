@@ -1,0 +1,11 @@
+.picture-oss-a{
+    display: flex;
+}
+
+.picture-oss-a .icon-container{
+    display: flex;
+    flex-direction: column;
+    height: 50px;
+    justify-content: space-around;
+    overflow: hidden;
+}

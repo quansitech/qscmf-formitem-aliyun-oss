@@ -34,7 +34,7 @@
             </notdefined>
             <script type="text/javascript">
                 (function () {
-                    var fileExts = "{$file_ext}";
+                    var fileExts_{$gid} = "{$file_ext}";
 
                     $('#{$gid}_preview .audio_oss').audioPlayer();
                     new plupload.Uploader({
@@ -48,7 +48,7 @@
 
                         filters: {
                             mime_types : [ //只允许上传音频
-                                { title : "Audio files", extensions : fileExts },
+                                { title : "Audio files", extensions : fileExts_{$gid} },
                             ],
                             prevent_duplicates : false //不允许选取重复文件
                         },
@@ -127,7 +127,7 @@
                                     alert("选择的文件太大了,建议不超过"+ MAX_SIZE_ALLOWED +",请重新上传");
                                 }
                                 else if (err.code == -601) {
-                                    alert("选择的文件后缀不对,建议上传"+ fileExts +",请重新上传");
+                                    alert("选择的文件后缀不对,建议上传"+ fileExts_{$gid} +",请重新上传");
                                 }
                                 else if (err.code == -602) {
                                     alert("这个文件已经上传过一遍了");

@@ -15,7 +15,7 @@ class FilesOss implements FormType{
 
         $view = new View();
         $view->assign('form', $form_type);
-        $view->assign('gid', Str::uuid());
+        $view->assign('gid', Str::uuid()->getHex());
         $view->assign('file_ext',  $upload_type_cls->getExts());
         $content = $view->fetch(__DIR__ . '/files_oss.html');
         return $content;
