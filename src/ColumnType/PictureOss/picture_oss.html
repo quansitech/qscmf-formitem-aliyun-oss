@@ -20,5 +20,7 @@
     <define name="column_type_picture_oss" value="1" />
 </notdefined>
 <a href="#" class="picture-oss-a">
-    <img class="picture-oss-url" data-url="{$image['url']}" src="{$image['small_url']}">
+    <notempty name="image.url">
+        <img class="picture-oss-url" data-url="{$image['url']}" src="{$image['small_url']}">
+    </notempty>
 </a>

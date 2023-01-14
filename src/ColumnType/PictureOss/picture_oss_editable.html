@@ -25,11 +25,13 @@
 </notdefined>
 <input type="hidden" name="{$option.name}[]" value="{$image_id}">
 <a href="#" class="picture-oss-a">
-    <div id="image-container-{$gid}">
-        <div class="picture-oss-url">
-            <img data-url="{$image['url']}" src="{$image['small_url']}">
+    <notempty name="image.url">
+        <div id="image-container-{$gid}">
+            <div class="picture-oss-url">
+                <img data-url="{$image['url']}" src="{$image['small_url']}">
+            </div>
         </div>
-    </div>
+    </notempty>
 
     <div class="icon-container">
         <div id="upload_{$gid}" <empty name='option.extra_attr'>data-url="{:U('/extends/AliyunOss/policyGet', array('type' => 'image'))}"<else/>{$option.extra_attr}</empty>>
