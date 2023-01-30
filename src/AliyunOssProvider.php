@@ -2,7 +2,9 @@
 namespace FormItem\AliyunOss;
 
 use Bootstrap\Provider;
+use Bootstrap\LaravelProvider;
 use Bootstrap\RegisterContainer;
+use Composer\InstalledVersions;
 use FormItem\AliyunOss\Controller\AliyunOssController;
 use FormItem\AliyunOss\FormType\AudioOss\AudioOss;
 use FormItem\AliyunOss\FormType\AudiosOss\AudiosOss;
@@ -14,7 +16,7 @@ use FormItem\AliyunOss\FormType\PicturesOss\PicturesOss;
 use FormItem\AliyunOss\FormType\PicturesOssIntercept\PicturesOssIntercept;
 use FormItem\AliyunOss\ColumnType\PictureOss\PictureOss as ColumnPictureOss;
 
-class AliyunOssProvider implements Provider {
+class AliyunOssProvider implements Provider, LaravelProvider {
 
     public function register(){
         $this->addHook();
@@ -37,5 +39,16 @@ class AliyunOssProvider implements Provider {
     protected function addHook(){
         \Think\Hook::add('heic_to_jpg', 'FormItem\\AliyunOss\\Behaviors\\HeicToJpgBehavior');
         \Think\Hook::add('get_auth_url', 'FormItem\\AliyunOss\\Behaviors\\SecurityUrlBehavior');
+    }
+
+    public function registerLara()
+    {
+        $think_core_version = InstalledVersions::getVersion("tiderjian/think-core");
+        //think-core 13版本会增加mime_type的长度
+        //12以下版本由于长度太小，office类的文件上传都会失败
+        if($think_core_version < 13){
+            RegisterContainer::registerMigration(__DIR__.'/migrations_v12fix');
+        }
+
     }
 }

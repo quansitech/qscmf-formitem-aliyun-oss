@@ -8,12 +8,17 @@
             </div>
         </div>
         <div id="preview_{$gid}">
-            <input type="hidden" name="{$form.name}" value="{$form.value}">
+            <input type="hidden" name="{$form.name}" value="{$file.id}">
             <ul class="list-group file-box">
                 <notempty name="form.value">
-                    <li class="list-group-item file-item" data-id="{$form.value}">
+                    <li class="list-group-item file-item" data-id="{$file.id}">
                         <i class="fa fa-file"></i>
-                        <span>{:showFileTitle($form['value'])} <a href="{$form.value|showFileUrl}" target="_blank">下载</a></span>
+                        <span>{:showFileTitle($file['id'])}
+                            <a href="{$file.url}" target="_blank">下载</a>
+                            <notempty name="file['preview_url']">
+                                <a href="{$file.preview_url}" target="_blank" style="margin-left: 5px;">预览</a>
+                            </notempty>
+                        </span>
                         <i class="fa fa-times-circle remove-file"></i>
                     </li>
                 </notempty>
@@ -28,6 +33,8 @@
         </notdefined>
         <script type="text/javascript">
             (function () {
+                {$js_fn}
+
                 var fileExts_{$gid} = "{$file_ext}";
 
                 new plupload.Uploader({
@@ -87,7 +94,14 @@
                                     return;
                                 }
                                 var new_file = '<li class="list-group-item file-item" data-id="'+response.file_id+'"><i class="fa fa-file"></i> '
-                                        +file.name+' <a href="'+response.file_url+'" target="_blank">下载</a> <i class="fa fa-times-circle remove-file"></i></li>';
+                                        +file.name+' <a href="' + '{:U('/extends/aliyunOss/download', [], '', true)}/file_id/' + response.file_id + '" target="_blank">下载</a>';
+
+                                var preview_url = previewUrl(response.file_url);
+                                if(preview_url){
+                                    new_file += '<a href="' + preview_url + '" target="_blank" style="margin-left: 5px;">预览</a>';
+                                }
+
+                                new_file += '<i class="fa fa-times-circle remove-file"></i></li>';
                                 $('#preview_{$gid} .list-group').html(new_file);
                                 $('#preview_{$gid} input').attr('value', response.file_id);
                             }

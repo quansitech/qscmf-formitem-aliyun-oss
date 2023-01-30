@@ -38,6 +38,7 @@ class AliyunOssController extends \Think\Controller{
         $file_data['url'] = $config['oss_host'] . '/' . $body_arr['filename'] . ($config['oss_style'] ? $config['oss_style'] : '');
         $file_data['size'] = $body_arr['size'];
         $file_data['cate'] = $body_arr['upload_type'];
+        \Think\Log::write($mime_type);
         $file_data['mime_type'] = $mime_type;
         $file_data['security'] = $config['security'] ? 1 : 0;
         $file_data['file'] = '';
@@ -200,5 +201,17 @@ class AliyunOssController extends \Think\Controller{
 
     protected function getMaxSize($type){
         return (new UploadConfig($type))->getMaxSize();
+    }
+
+    public function download(int $file_id){
+        $ent = D("FilePic")->where(['id' => $file_id])->find();
+        $url = showFileUrl($file_id);
+        header("Content-type: application/force-download");
+        header('Content-Disposition: inline; filename="' . $ent['title'] . '"');
+        header("Content-Transfer-Encoding: Binary");
+        header("Content-length: " . $ent['size']);
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . $ent['title'] . '"');
+        echo file_get_contents($url);
     }
 }
