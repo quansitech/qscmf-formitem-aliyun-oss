@@ -25,8 +25,23 @@ class ChangeMimeTypeLengthForFilcPic extends Migration
     public function up()
     {
         Schema::table('qs_file_pic', function (Blueprint $table) {
-            $table->string('mime_type', 200)->default('')->change();
+            $columns = DB::select('show columns from qs_file_pic');
+
+            $count = collect($columns)->filter(function ($column) {
+                return $column->Field == 'mime_type';
+            })->count();
+
+            if(!!$count){
+                $table->string('mime_type', 200)->default('')->change();
+            }
+            else{
+                $table->string("mime_type", 200)->default("")->after("cate");
+            }
+
+
         });
+
+
     }
 
     /**
