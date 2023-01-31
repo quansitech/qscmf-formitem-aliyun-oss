@@ -38,7 +38,6 @@ class AliyunOssController extends \Think\Controller{
         $file_data['url'] = $config['oss_host'] . '/' . $body_arr['filename'] . ($config['oss_style'] ? $config['oss_style'] : '');
         $file_data['size'] = $body_arr['size'];
         $file_data['cate'] = $body_arr['upload_type'];
-        \Think\Log::write($mime_type);
         $file_data['mime_type'] = $mime_type;
         $file_data['security'] = $config['security'] ? 1 : 0;
         $file_data['file'] = '';
