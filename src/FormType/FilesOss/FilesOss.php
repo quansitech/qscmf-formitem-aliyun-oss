@@ -19,7 +19,7 @@ class FilesOss extends FileFormType implements FormType{
             $files = [];
             foreach(explode(',', $form_type['value']) as $file_id){
                 $data = [];
-                $data['url'] = U('/extends/aliyunOss/download', array('file_id' => $file_id), '', true);
+                $data['url'] = showFileUrl($form_type['value']);
 
                 $data['id'] = $file_id;
                 if($this->needPreview(showFileUrl($file_id))){
