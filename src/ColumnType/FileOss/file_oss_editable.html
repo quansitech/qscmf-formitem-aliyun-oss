@@ -1,0 +1,157 @@
+<notdefined name="column_type_file_oss">
+    <link  href="__PUBLIC__/libs/viewerjs/viewer.css" rel="stylesheet">
+    <link  href="__PUBLIC__/aliyun-oss/css/style.css" rel="stylesheet">
+    <script src="__PUBLIC__/libs/viewerjs/viewer.js"></script>
+    <script src="__PUBLIC__/aliyun-oss/circle-progress.min.js"></script>
+    <script type="text/javascript" src="{:asset('aliyun-oss/plupload-2.1.2/js/plupload.full.min.js')}"></script>
+    <script type="text/javascript" src="{:asset('aliyun-oss/ossupload/oss_upload.js')}"></script>
+    <script>
+        jQuery(document).ready(function($){
+            $('.file-oss-url').each(function(){
+                // new Viewer(this,{
+                //     url: 'data-url'
+                // });
+            })
+        });
+    </script>
+    <style>
+        .file-oss-url{
+            margin-right: 5px;
+        }
+
+    </style>
+    <define name="column_type_file_oss" value="1" />
+</notdefined>
+<input type="hidden" name="{$option.name}" value="{$file_id}">
+            <a href="javascript:void(0)">
+                <div id="upload_{$gid}" <empty name='option.extra_attr'>data-url="{:U('/extends/AliyunOss/policyGet', array('type' => 'file'))}"<else/>{$option.extra_attr}</empty>>
+                <span id="upload_{$gid}_selectfiles">上传文件</span>
+                </div>
+            </a>
+    <notempty name="file.url">
+        <div id="file-container-{$gid}">
+            <div class="file-oss-url">
+                <span >{$file['name']}</span>
+                <a href="javascript:void(0)" style="margin-left: 10px;"><i class="fa fa-trash-o" id="remove_{$gid}"></i></a>
+            </div>
+        </div>
+    </notempty>
+
+    <!--<div class="icon-container">-->
+    <!--    <div id="upload_{$gid}" <empty name='option.extra_attr'>data-url="{:U('/extends/AliyunOss/policyGet', array('type' => 'file'))}"<else/>{$option.extra_attr}</empty>>-->
+    <!--        <i class="fa fa-upload" id="upload_{$gid}_selectfiles"></i>-->
+    <!--    </div>-->
+    <!--    <i class="fa fa-trash-o" id="remove_{$gid}"></i>-->
+    <!--</div>-->
+<script type="text/javascript">
+    (function () {
+        var fileExts_{$gid} = "{$file_ext}";
+        var cicleProgress_{$gid} = {};
+
+        new plupload.Uploader({
+            runtimes : 'html5,flash,silverlight,html4',
+            browse_button : 'upload_{$gid}_selectfiles',
+            multi_selection: false,
+            container: document.getElementById('upload_{$gid}'),
+            flash_swf_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.swf")}',
+            silverlight_xap_url : '{:asset("aliyun-oss/plupload-2.1.2/js/Moxie.xap")}',
+            url : 'http://oss.aliyuncs.com',
+
+            filters: {
+                mime_types : [
+                    { title : "files", extensions : fileExts_{$gid} },
+    ],
+        prevent_duplicates : false //不允许选取重复文件
+    },
+
+        init: {
+            PostInit: function() {
+            },
+
+            FilesAdded: function(up, files) {
+                $("#file-container-{$gid}").html('');
+                $("input[name='{$option.name}']").val('');
+                plupload.each(files, function(file) {
+                    var html = '<div id="' + file.id + '" class="file-oss-url"></div>';
+                    $("#file-container-{$gid}").append(html);
+                    cicleProgress_{$gid}[file.id] = new CircleProgress(document.getElementById(file.id), {});
+                    set_upload_param(up, file.name, false, $('#upload_{$gid}').data('url'),'title='+encodeURIComponent(file.name));
+                });
+
+            },
+
+//                        BeforeUpload: function(up, file) {
+//                            check_object_radio();
+//                        },
+
+            UploadProgress: function(up, file) {
+                // $('#' + file.id).children('.uploadify-progress').attr('lastloaded', file.loaded);
+                // $('#' + file.id).find('.uploadify-progress-bar').css('width', file.percent + "%");
+                // $('#' + file.id).children('.up_percent').html(file.percent + "%");
+                cicleProgress_{$gid}[file.id].progress(file.percent);
+            },
+
+            FileUploaded: function(up, file, info) {
+                if (info.status == 200)
+                {
+                    var response = JSON.parse(info.response);
+                    if (response.err_msg) {
+                        $("#file-container-{$gid}").html('');
+                        alert(response.err_msg);
+                        return;
+                    }
+                    var url = response.file_url;
+
+                    $("#file-container-{$gid}").html('<div class="file-oss-url"><span>'+ file.name+'</span>' +`<a href="javascript:void(0)" style="margin-left: 10px;"><i class="fa fa-trash-o" id="remove_{$gid}"></i></a>`+ '</div>');
+                    $("input[name='{$option.name}']").val(response.file_id);
+
+                }
+                else
+                {
+                    alert(info.response);
+                }
+            },
+
+            Error: function(up, err) {
+                var MAX_SIZE_ALLOWED = '';
+                var errText = '';
+                var codeMap = {
+                    EntityTooLarge: -600,
+                }
+                try{
+                    var parser = new DOMParser();
+                    xmlDoc = parser.parseFromString(err.response, "text/xml");
+                    errText = $(xmlDoc).find('Code').text();
+                    MAX_SIZE_ALLOWED = ($(xmlDoc).find('MaxSizeAllowed').text() / 1024 / 1024) + 'Mb';
+                }catch(e){
+                }
+
+                err.code = errText ? codeMap[errText] : err.code;
+
+                $('#' + err.file.id).remove();
+
+
+                if (err.code == codeMap.EntityTooLarge) {
+                    alert("选择的文件太大了,建议不超过"+ MAX_SIZE_ALLOWED +",请重新上传");
+                }
+                else if (err.code == -601) {
+                    alert("选择的文件后缀不对,建议上传"+ fileExts_{$gid} +",请重新上传");
+                }
+                else if (err.code == -602) {
+                    alert("这个文件已经上传过一遍了");
+                }
+                else
+                {
+                    alert(err.response);
+                }
+            }
+        }
+    }).init();
+
+        //删除图片
+        $('#remove_{$gid}').on('click', function(){
+            $(".file-oss-url").html('');
+            $("input[name='{$option.name}[]']").val('');
+        });
+    })();
+</script>
