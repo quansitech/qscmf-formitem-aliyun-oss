@@ -17,7 +17,7 @@
             margin-right: 5px;
         }
         .text-cut {
-            max-width: 200px;
+            /*max-width: 200px;*/
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
@@ -31,7 +31,7 @@
     <notempty name="file.url">
         <div id="file-container-{$gid}" style="display: flex;justify-content: space-between;align-items: center">
             <div class="text-cut">
-                <span >{$file['name']}</span>
+                <span id="span-{$gid}" data-url="{$file.url}">{$file['name']}</span>
             </div>
         </div>
         <else/>
@@ -106,8 +106,13 @@
                         return;
                     }
                     var url = response.file_url;
-                    $("#file-container-{$gid}").html('<div class=""><span>'+file.name+'</span>'+ '</div>');
+                    $("#file-container-{$gid}").html('<span id="span-{$gid}" data-url="'+url+'">'+file.name+'</span>');
                     $("#input-{$gid}").val(response.file_id);
+
+                    $('#span-{$gid}').on('click', function(){
+                        var url = $(this).data('url');
+                        window.open(url);
+                    })
                 }
                 else
                 {
@@ -151,10 +156,13 @@
         }
     }).init();
 
-        //删除图片
         $('#remove_{$gid}').on('click', function(){
             $("#file-container-{$gid}").html('');
             $("#input-{$gid}").val('');
+        });
+        $('#span-{$gid}').on('click', function(){
+            var url = $(this).data('url');
+            window.open(url);
         });
     })();
 </script>
