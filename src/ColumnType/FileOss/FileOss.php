@@ -14,6 +14,15 @@ class FileOss extends ColumnType implements EditableInterface {
     use TargetFormTrait;
 
     public function build(array &$option, array $data, $listBuilder){
+	    $view = new View();
+	    $file = [
+		    'url' => showFileUrl($data[$option['name']]),
+		    'name' => showFileTitle($data[$option['name']]),
+	    ];
+	    $view->assign('file', $file);
+	    $view->assign('gid', Str::uuid()->getHex());
+	    $content = $view->fetch(__DIR__ . '/file_oss.html');
+	    return $content;
     }
 
     public function editBuild(array &$option, array $data, $listBuilder){
