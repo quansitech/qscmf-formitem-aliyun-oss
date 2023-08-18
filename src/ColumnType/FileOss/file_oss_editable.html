@@ -7,42 +7,45 @@
     <script type="text/javascript" src="{:asset('aliyun-oss/ossupload/oss_upload.js')}"></script>
     <script>
         jQuery(document).ready(function($){
-            $('.file-oss-url').each(function(){
-                // new Viewer(this,{
-                //     url: 'data-url'
-                // });
-            })
+
         });
     </script>
     <style>
         .file-oss-url{
+            width: 40px;
+            height: 40px;
             margin-right: 5px;
         }
-
+        .text-cut {
+            max-width: 200px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
     </style>
     <define name="column_type_file_oss" value="1" />
 </notdefined>
-<input type="hidden" name="{$option.name}" value="{$file_id}">
-            <a href="javascript:void(0)">
-                <div id="upload_{$gid}" <empty name='option.extra_attr'>data-url="{:U('/extends/AliyunOss/policyGet', array('type' => 'file'))}"<else/>{$option.extra_attr}</empty>>
-                <span id="upload_{$gid}_selectfiles">上传文件</span>
-                </div>
-            </a>
+
+<input type="hidden" name="{$option.name}[]" value="{$file_id}" id="input-{$gid}">
+<a href="javascript:;" class="file-oss-a">
     <notempty name="file.url">
-        <div id="file-container-{$gid}">
-            <div class="file-oss-url">
+        <div id="file-container-{$gid}" style="display: flex;justify-content: space-between;align-items: center">
+            <div class="text-cut">
                 <span >{$file['name']}</span>
-                <a href="javascript:void(0)" style="margin-left: 10px;"><i class="fa fa-trash-o" id="remove_{$gid}"></i></a>
             </div>
+        </div>
+        <else/>
+        <div id="file-container-{$gid}" >
         </div>
     </notempty>
 
-    <!--<div class="icon-container">-->
-    <!--    <div id="upload_{$gid}" <empty name='option.extra_attr'>data-url="{:U('/extends/AliyunOss/policyGet', array('type' => 'file'))}"<else/>{$option.extra_attr}</empty>>-->
-    <!--        <i class="fa fa-upload" id="upload_{$gid}_selectfiles"></i>-->
-    <!--    </div>-->
-    <!--    <i class="fa fa-trash-o" id="remove_{$gid}"></i>-->
-    <!--</div>-->
+    <div class="icon-container">
+        <div id="upload_{$gid}" <empty name='option.extra_attr'>data-url="{:U('/extends/AliyunOss/policyGet', array('type' => 'file'))}"<else/>{$option.extra_attr}</empty>>
+        <i class="fa fa-upload" id="upload_{$gid}_selectfiles"></i>
+    </div>
+    <i class="fa fa-trash-o" id="remove_{$gid}"></i>
+    </div>
+</a>
 <script type="text/javascript">
     (function () {
         var fileExts_{$gid} = "{$file_ext}";
@@ -58,7 +61,7 @@
             url : 'http://oss.aliyuncs.com',
 
             filters: {
-                mime_types : [
+                mime_types : [ //只允许上传图片
                     { title : "files", extensions : fileExts_{$gid} },
     ],
         prevent_duplicates : false //不允许选取重复文件
@@ -66,23 +69,25 @@
 
         init: {
             PostInit: function() {
+
             },
 
             FilesAdded: function(up, files) {
                 $("#file-container-{$gid}").html('');
-                $("input[name='{$option.name}']").val('');
+                $("#input-{$gid}").val('');
                 plupload.each(files, function(file) {
                     var html = '<div id="' + file.id + '" class="file-oss-url"></div>';
                     $("#file-container-{$gid}").append(html);
                     cicleProgress_{$gid}[file.id] = new CircleProgress(document.getElementById(file.id), {});
+                    cicleProgress_{$gid}[file.id].progress(0);
                     set_upload_param(up, file.name, false, $('#upload_{$gid}').data('url'),'title='+encodeURIComponent(file.name));
                 });
 
             },
 
-//                        BeforeUpload: function(up, file) {
-//                            check_object_radio();
-//                        },
+            BeforeUpload: function(up, file) {
+
+            },
 
             UploadProgress: function(up, file) {
                 // $('#' + file.id).children('.uploadify-progress').attr('lastloaded', file.loaded);
@@ -101,10 +106,8 @@
                         return;
                     }
                     var url = response.file_url;
-
-                    $("#file-container-{$gid}").html('<div class="file-oss-url"><span>'+ file.name+'</span>' +`<a href="javascript:void(0)" style="margin-left: 10px;"><i class="fa fa-trash-o" id="remove_{$gid}"></i></a>`+ '</div>');
-                    $("input[name='{$option.name}']").val(response.file_id);
-
+                    $("#file-container-{$gid}").html('<div class=""><span>'+file.name+'</span>'+ '</div>');
+                    $("#input-{$gid}").val(response.file_id);
                 }
                 else
                 {
@@ -150,8 +153,8 @@
 
         //删除图片
         $('#remove_{$gid}').on('click', function(){
-            $(".file-oss-url").html('');
-            $("input[name='{$option.name}[]']").val('');
+            $("#file-container-{$gid}").html('');
+            $("#input-{$gid}").val('');
         });
     })();
 </script>
