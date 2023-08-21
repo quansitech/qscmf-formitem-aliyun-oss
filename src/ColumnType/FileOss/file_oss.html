@@ -1,27 +1,5 @@
-<notdefined name="column_type_file_oss">
-    <link  href="__PUBLIC__/libs/viewerjs/viewer.css" rel="stylesheet">
-    <script src="__PUBLIC__/libs/viewerjs/viewer.js"></script>
-    <script>
-        jQuery(document).ready(function($){
-
-        });
-    </script>
-    <style>
-
-    </style>
-    <define name="column_type_file_oss" value="1" />
-</notdefined>
-<a href="javascript:;" class="file-oss-a">
+<a href="{$file.url}" class="file-oss-a" target="_blank">
     <notempty name="file.url">
-        <span id="span-{$gid}" data-url="{$file.url}">{$file['name']}</span>
+        <span>{$file['name']}</span>
     </notempty>
 </a>
-
-<script type="text/javascript">
-    (function () {
-        $('#span-{$gid}').on('click', function(){
-            var url = $(this).data('url');
-            window.open(url);
-        });
-    })();
-</script>
