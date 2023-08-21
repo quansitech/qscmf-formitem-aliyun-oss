@@ -1,43 +1,40 @@
-<notdefined name="column_type_picture_oss">
-    <link  href="__PUBLIC__/libs/viewerjs/viewer.css" rel="stylesheet">
+<notdefined name="column_type_file_oss">
     <link  href="__PUBLIC__/aliyun-oss/css/style.css" rel="stylesheet">
-    <script src="__PUBLIC__/libs/viewerjs/viewer.js"></script>
     <script src="__PUBLIC__/aliyun-oss/circle-progress.min.js"></script>
     <script type="text/javascript" src="{:asset('aliyun-oss/plupload-2.1.2/js/plupload.full.min.js')}"></script>
     <script type="text/javascript" src="{:asset('aliyun-oss/ossupload/oss_upload.js')}"></script>
-    <script>
-        jQuery(document).ready(function($){
-            $('.picture-oss-url').each(function(){
-                new Viewer(this,{
-                    url: 'data-url'
-                });
-            })
-        });
-    </script>
+
     <style>
-        .picture-oss-url{
+        .file-oss-url{
             width: 40px;
             height: 40px;
             margin-right: 5px;
         }
+        .text-cut {
+            /*max-width: 200px;*/
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
     </style>
-    <define name="column_type_picture_oss" value="1" />
+    <define name="column_type_file_oss" value="1" />
 </notdefined>
-<input type="hidden" name="{$option.name}[]" value="{$image_id}" id="input-{$option.name}-{$gid}">
-<a href="javascript:;" class="picture-oss-a">
-    <notempty name="image.url">
-        <div id="image-container-{$gid}">
-            <div class="picture-oss-url">
-                <img data-url="{$image['url']}" src="{$image['small_url']}">
+
+<input type="hidden" name="{$option.name}[]" value="{$file_id}" id="input-{$gid}">
+<a href="javascript:;" class="file-oss-a">
+    <notempty name="file.url">
+        <div id="file-container-{$gid}" style="display: flex;justify-content: space-between;align-items: center">
+            <div class="text-cut">
+                <span id="span-{$gid}" data-url="{$file.url}">{$file['name']}</span>
             </div>
         </div>
         <else/>
-        <div id="image-container-{$gid}">
+        <div id="file-container-{$gid}" >
         </div>
     </notempty>
 
     <div class="icon-container">
-        <div id="upload_{$gid}" <empty name='option.extra_attr'>data-url="{:U('/extends/AliyunOss/policyGet', array('type' => 'image'))}"<else/>{$option.extra_attr}</empty>>
+        <div id="upload_{$gid}" <empty name='option.extra_attr'>data-url="{:U('/extends/AliyunOss/policyGet', array('type' => 'file'))}"<else/>{$option.extra_attr}</empty>>
         <i class="fa fa-upload" id="upload_{$gid}_selectfiles"></i>
     </div>
     <i class="fa fa-trash-o" id="remove_{$gid}"></i>
@@ -59,7 +56,7 @@
 
             filters: {
                 mime_types : [ //只允许上传图片
-                    { title : "Image files", extensions : fileExts_{$gid} },
+                    { title : "files", extensions : fileExts_{$gid} },
     ],
         prevent_duplicates : false //不允许选取重复文件
     },
@@ -70,11 +67,11 @@
             },
 
             FilesAdded: function(up, files) {
-                $("#image-container-{$gid}").html('');
-                $("#input-{$option.name}-{$gid}").val('');
+                $("#file-container-{$gid}").html('');
+                $("#input-{$gid}").val('');
                 plupload.each(files, function(file) {
-                    var html = '<div id="' + file.id + '" class="picture-oss-url"></div>';
-                    $("#image-container-{$gid}").append(html);
+                    var html = '<div id="' + file.id + '" class="file-oss-url"></div>';
+                    $("#file-container-{$gid}").append(html);
                     cicleProgress_{$gid}[file.id] = new CircleProgress(document.getElementById(file.id), {});
                     cicleProgress_{$gid}[file.id].progress(0);
                     set_upload_param(up, file.name, false, $('#upload_{$gid}').data('url'),'title='+encodeURIComponent(file.name));
@@ -82,9 +79,9 @@
 
             },
 
-//                        BeforeUpload: function(up, file) {
-//                            check_object_radio();
-//                        },
+            BeforeUpload: function(up, file) {
+
+            },
 
             UploadProgress: function(up, file) {
                 // $('#' + file.id).children('.uploadify-progress').attr('lastloaded', file.loaded);
@@ -98,18 +95,17 @@
                 {
                     var response = JSON.parse(info.response);
                     if (response.err_msg) {
-                        $("#image-container-{$gid}").html('');
+                        $("#file-container-{$gid}").html('');
                         alert(response.err_msg);
                         return;
                     }
                     var url = response.file_url;
-                    var small_url = response.file_url + '?x-oss-process=image/resize,m_fill,h_40,w_40';
-                    $("#image-container-{$gid}").html('<div class="picture-oss-url"><img data-url="'+ url +'" src="' + small_url+ '"></div>');
-                    $("#input-{$option.name}-{$gid}").val(response.file_id);
-                    $('.picture-oss-url').each(function(){
-                        new Viewer(this,{
-                            url: 'data-url'
-                        });
+                    $("#file-container-{$gid}").html('<span id="span-{$gid}" data-url="'+url+'">'+file.name+'</span>');
+                    $("#input-{$gid}").val(response.file_id);
+
+                    $('#span-{$gid}').on('click', function(){
+                        var url = $(this).data('url');
+                        window.open(url);
                     })
                 }
                 else
@@ -154,10 +150,13 @@
         }
     }).init();
 
-        //删除图片
         $('#remove_{$gid}').on('click', function(){
-            $("#image-container-{$gid}").html('');
-            $("#input-{$option.name}-{$gid}").val('');
+            $("#file-container-{$gid}").html('');
+            $("#input-{$gid}").val('');
+        });
+        $('#span-{$gid}').on('click', function(){
+            var url = $(this).data('url');
+            window.open(url);
         });
     })();
 </script>

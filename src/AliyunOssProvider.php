@@ -15,6 +15,7 @@ use FormItem\AliyunOss\FormType\PictureOssIntercept\PictureOssIntercept;
 use FormItem\AliyunOss\FormType\PicturesOss\PicturesOss;
 use FormItem\AliyunOss\FormType\PicturesOssIntercept\PicturesOssIntercept;
 use FormItem\AliyunOss\ColumnType\PictureOss\PictureOss as ColumnPictureOss;
+use FormItem\AliyunOss\ColumnType\FileOss\FileOss as ColumnFileOss;
 
 class AliyunOssProvider implements Provider, LaravelProvider {
 
@@ -30,6 +31,7 @@ class AliyunOssProvider implements Provider, LaravelProvider {
         RegisterContainer::registerFormItem('picture_oss_intercept', PictureOssIntercept::class);
         RegisterContainer::registerFormItem('pictures_oss_intercept', PicturesOssIntercept::class);
         RegisterContainer::registerListColumnType("picture_oss",ColumnPictureOss::class);
+	    RegisterContainer::registerListColumnType("file_oss",ColumnFileOss::class);
 
         RegisterContainer::registerController('extends', 'AliyunOss', AliyunOssController::class);
 
