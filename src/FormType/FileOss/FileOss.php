@@ -15,7 +15,7 @@ class FileOss extends FileFormType implements FormType{
         $view = new View();
         if($form_type['value']){
             $file['id'] = $form_type['value'];
-            $file['url'] = showFileUrl($form_type['value']);
+	        $file['url'] = U('/extends/aliyunOss/download', ['file_id'=>$form_type['value']], '', true);
 
             if($this->needPreview(showFileUrl($form_type['value']))){
                 $file['preview_url'] = $this->genPreviewUrl(showFileUrl($form_type['value']));
