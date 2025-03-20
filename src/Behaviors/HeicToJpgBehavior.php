@@ -6,7 +6,7 @@ use FormItem\AliyunOss\Lib\File;
 
 class HeicToJpgBehavior{
 
-    protected File $file;
+    protected $file;
 
     public function run(&$params)
     {
