@@ -4,7 +4,7 @@ namespace FormItem\AliyunOss\Lib;
 
 class UploadConfig
 {
-    protected array $config;
+    protected $config;
 
     public function __construct($type){
         $this->config = C('UPLOAD_TYPE_' . strtoupper($type));

@@ -4,8 +4,8 @@ namespace FormItem\AliyunOss\Lib;
 
 class File
 {
-    protected string $url;
-    protected string $mime_type;
+    protected $url;
+    protected $mime_type;
 
     public function __construct($url, $mime_type){
         $this->setUrl($url);
