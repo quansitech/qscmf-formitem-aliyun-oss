@@ -20,6 +20,10 @@ class SecurityUrlBehavior{
         $ali_oss = new AliyunOss();
         $url = $ali_oss->getOssClient($file_ent['cate'])->signUrl($object, $params['timeout']);
         if($url){
+            if(isset($config['oss_public_host'])){
+                $show_host = $config['oss_public_host'];
+                $url = str_replace($config['oss_host'], $show_host, $url);
+            }
             $params['auth_url'] = $url;
         }
     }
